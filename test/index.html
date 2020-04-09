@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta http-equiv="Content-Script-Type" content="text/javascript">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!--link rel="stylesheet" href="/css/reset.css"-->
+    <script type="text/javascript" src="../src/Swe.js"></script>
+    <script type="text/javascript" src="../src/Classes.js"></script>
+    <script type="text/javascript" src="../src/Swenut2000.js"></script>
+    <script type="text/javascript" src="../src/SwephData.js"></script>
+    <script type="text/javascript" src="../src/SwissData.js"></script>
+    <script type="text/javascript" src="../src/SweDate.js"></script>
+    <script type="text/javascript" src="../src/SwissLib.js"></script>
+    <script type="text/javascript" src="../src/Swemmoon.js"></script>
+
+    <script type="text/javascript" src="../src/SwemptabMer.js"></script>
+    <script type="text/javascript" src="../src/SwemptabVen.js"></script>
+    <script type="text/javascript" src="../src/SwemptabEar.js"></script>
+    <script type="text/javascript" src="../src/SwemptabMar.js"></script>
+    <script type="text/javascript" src="../src/SwemptabJup.js"></script>
+    <script type="text/javascript" src="../src/SwemptabSat.js"></script>
+    <script type="text/javascript" src="../src/SwemptabUra.js"></script>
+    <script type="text/javascript" src="../src/SwemptabNep.js"></script>
+    <script type="text/javascript" src="../src/SwemptabPlu.js"></script>
+    <script type="text/javascript" src="../src/SwephMosh.js"></script>
+
+    <script type="text/javascript" src="../src/SweHouse.js"></script>
+    <script type="text/javascript" src="../src/Swecl.js"></script>
+    <script type="text/javascript" src="../src/SwissEph.js"></script>
+
+   <script type="text/javascript" src="../src/Pluto.js"></script> 
+    <title>Pluto.js</title>
+  </head>
+  <body>
+    <h1>Pluto.js</h1>
+    <table>
+      <tr>
+        <th>Planet</th>
+        <th>Degree</th>
+      </tr>
+      <tr>
+        <td>Sun</td>
+        <td id="sun"></td>
+      </tr>
+      <tr>
+        <td>Moon</td>
+        <td id="moon"></td>
+      </tr>
+      <tr>
+        <td>Mercury</td>
+        <td id="mercury"></td>
+      </tr>
+      <tr>
+        <td>Venus</td>
+        <td id="venus"></td>
+      </tr>
+      <tr>
+        <td>Mars</td>
+        <td id="mars"></td>
+      </tr>
+      <tr>
+        <td>Jupiter</td>
+        <td id="jupiter"></td>
+      </tr>
+      <tr>
+        <td>Saturn</td>
+        <td id="saturn"></td>
+      </tr>
+      <tr>
+        <td>uranus</td>
+        <td id="uranus"></td>
+      </tr>
+      <tr>
+        <td>Neptune</td>
+        <td id="neptune"></td>
+      </tr>
+      <tr>
+        <td>Pluto</td>
+        <td id="pluto"></td>
+      </tr>
+    </table>
+    <script>
+      var signs = [
+        "Aries",
+        "Tauros",
+        "Gemini",
+        "Cancer",
+        "Leo",
+        "Virgo",
+        "Libra",
+        "Scopio",
+        "Sagiterius",
+        "Capricorn",
+        "Aquarius",
+        "Pisces",
+      ];
+
+    var a = new Pluto({
+      year: 2000,
+      month: 1,
+      day: 1,
+      hour: 0,
+      minute: 0,
+      timezone: 0,
+    });
+
+    var start_ms = new Date().getTime();
+    var p = a.getPlanetPosition();
+    a.setGeoPosition(43, 135);
+    var h = a.getHouse("K");
+
+    $('#sun').text(p.Sun.longitude);
+    $('#moon').text(p.Moon.longitude);
+    $('#mercury').text(p.Mercury.longitude);
+    $('#venus').text(p.Venus.longitude);
+    $('#mars').text(p.Mars.longitude);
+    $('#jupiter').text(p.Jupiter.longitude);
+    $('#saturn').text(p.Saturn.longitude);
+    $('#uranus').text(p.Uranus.longitude);
+    $('#neptune').text(p.Neptune.longitude);
+    $('#pluto').text(p.Pluto.longitude);
+
+    var elapsed_ms = new Date().getTime() - start_ms;
+    console.log('処理時間：' + elapsed_ms);
+
+    </script>
+  </body>
