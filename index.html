@@ -4,33 +4,10 @@
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <meta http-equiv="Content-Script-Type" content="text/javascript">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!--link rel="stylesheet" href="/css/reset.css"-->
-    <script type="text/javascript" src="../src/Swe.js"></script>
-    <script type="text/javascript" src="../src/Classes.js"></script>
-    <script type="text/javascript" src="../src/Swenut2000.js"></script>
-    <script type="text/javascript" src="../src/SwephData.js"></script>
-    <script type="text/javascript" src="../src/SwissData.js"></script>
-    <script type="text/javascript" src="../src/SweDate.js"></script>
-    <script type="text/javascript" src="../src/SwissLib.js"></script>
-    <script type="text/javascript" src="../src/Swemmoon.js"></script>
 
-    <script type="text/javascript" src="../src/SwemptabMer.js"></script>
-    <script type="text/javascript" src="../src/SwemptabVen.js"></script>
-    <script type="text/javascript" src="../src/SwemptabEar.js"></script>
-    <script type="text/javascript" src="../src/SwemptabMar.js"></script>
-    <script type="text/javascript" src="../src/SwemptabJup.js"></script>
-    <script type="text/javascript" src="../src/SwemptabSat.js"></script>
-    <script type="text/javascript" src="../src/SwemptabUra.js"></script>
-    <script type="text/javascript" src="../src/SwemptabNep.js"></script>
-    <script type="text/javascript" src="../src/SwemptabPlu.js"></script>
-    <script type="text/javascript" src="../src/SwephMosh.js"></script>
-
-    <script type="text/javascript" src="../src/SweHouse.js"></script>
-    <script type="text/javascript" src="../src/Swecl.js"></script>
-    <script type="text/javascript" src="../src/SwissEph.js"></script>
-
-   <script type="text/javascript" src="../src/Pluto.js"></script> 
+   <script type="text/javascript" src="Pluto.js"></script> 
+   <script type="text/javascript" src="src/operate.js"></script> 
     <title>Pluto.js</title>
   </head>
   <body>
@@ -87,28 +64,32 @@
     </table>
     <script>
       var signs = [
-        "Aries",
-        "Tauros",
-        "Gemini",
-        "Cancer",
-        "Leo",
-        "Virgo",
-        "Libra",
-        "Scopio",
-        "Sagiterius",
-        "Capricorn",
-        "Aquarius",
-        "Pisces",
-      ];
+          "Aries",
+          "Tauros",
+          "Gemini",
+          "Cancer",
+          "Leo",
+          "Virgo",
+          "Libra",
+          "Scopio",
+          "Sagiterius",
+          "Capricorn",
+          "Aquarius",
+          "Pisces",
+        ];
 
-    Pluto.setDate(2000, 1, 1, 0, 0, 0);
+      var start_ms = new Date().getTime();
 
-    var start_ms = new Date().getTime();
-    var p = Pluto.getPlanetPosition();
-//    a.setGeoPosition(43, 135);
-//    var h = a.getHouse("K");
+      $pl.setDate(2000, 1, 1, 0, 0, 0, 0);
+      $pl.getPosition("sun");
 
-    $('#sun').text(p.Sun.longitude+" ( "+getDigit60(p.Sun.longitude)+" )");
+
+      //var p = Pluto.getPlanetPosition();
+      //a.setGeoPosition(43, 135);
+      //var h = a.getHouse("K");
+
+      document.getElementById('sun').innerText = $const.body.position.apparentLongitude+" ( "+getDigit60($const.body.position.apparentLongitude)+" )";
+/*
     $('#moon').text(p.Moon.longitude+" ( "+getDigit60(p.Moon.longitude)+" )");
     $('#mercury').text(p.Mercury.longitude);
     $('#venus').text(p.Venus.longitude);
@@ -119,7 +100,7 @@
     $('#neptune').text(p.Neptune.longitude+" ( "+getDigit60(p.Neptune.longitude)+" )");
     $('#pluto').text(p.Pluto.longitude+" ( "+getDigit60(p.Pluto.longitude)+" )");
     $('#julian_utc').text(pl.julian_utc);
-
+*/
     var elapsed_ms = new Date().getTime() - start_ms;
     console.log('処理時間：' + elapsed_ms);
 

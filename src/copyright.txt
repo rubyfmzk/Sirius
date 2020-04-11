@@ -1,34 +1,17 @@
 /*
+Copyright (C) 2019 Ruby Fumizki
 
-  Pluto ver0.0
-  Pluto
+This is released under the GNU GPLv3.
+This fale is made from the Swiss Ephemeris Free Edition, Version 2.00.00 of Astrodienst AG, Switzerland from the original C Code to JavaScript.
 
-  Licensed under GNU General Public License v2.0
+For any questions or comments regarding this file, you should contact me.
 
-  This file is made from the Swiss Ephemeris Free Edition, Version 2.00.00 of Astrodienst AG, Switzerland from the original C Code to JAVA and JAVA to JavaScript.
-
-  For any questions or comments regarding this file, you should contact me.
-
-  Copyright 2020- Ruby Fumizuki
-  https://rubyfmzk.com
-  rubyfmzk@gmail.com
-
+March 1, 2019
+Ruby Fumizki
+http://rubyfmzk.com
+rubyfmzk@gmail.com
 */
-/*
-   This is a port of the Swiss Ephemeris Free Edition, Version 2.00.00
-   of Astrodienst AG, Switzerland from the original C Code to Java. For
-   copyright see the original copyright notices below and additional
-   copyright notes in the file named LICENSE, or - if this file is not
-   available - the copyright notes at http://www.astro.ch/swisseph/ and
-   following. 
 
-   For any questions or comments regarding this port to Java, you should
-   ONLY contact me and not Astrodienst, as the Astrodienst AG is not involved
-   in this port in any way.
-
-   Thomas Mack, mack@ifis.cs.tu-bs.de, 23rd of April 2001
-
-*/
 /* Copyright (C) 1997 - 2008 Astrodienst AG, Switzerland.  All rights reserved.
 
   License conditions
