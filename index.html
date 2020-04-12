@@ -6,19 +6,58 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <!--link rel="stylesheet" href="/css/reset.css"-->
 
-   <script type="text/javascript" src="Pluto.js"></script> 
+    <script type="text/javascript" src="Pluto.js"></script> 
+    <script type="text/javascript" src="src/operate.js"></script> 
     <title>Pluto.js</title>
+
+    <style>
+      #result tr:nth-child(even){
+        background: #eef;
+      }
+      #result td{
+        vertical-align: top;
+      }
+    </style>
   </head>
   <body>
     <h1>Pluto.js</h1>
-    <table id="result">
+    <table>
+      <tr>
+        <td>Year-Month-Day</ted>
+        <td>
+          <input id="year" value="2000"> -
+          <input id="month" value="1"> -
+          <input id="day" value="1">
+        </td>
+      </td>
+      <tr>
+        <td>Hour:Minute</td>
+        <td>
+          <input id="hour" value="0"> :
+          <input id="minute" value="0">
+        </td>
+      </td>
+      <tr>
+        <td>Timezone</td>
+        <td>
+          <input id="timezone" value="0">
+        </td>
+      </tr>
+    </table>
+
+    <button onclick="calc();">Calculate</button>
+
+    <table>
       <tr>
         <th>Planet</th>
         <th>Longitude</th>
         <th>Longitude Speed</th>
         <th>Laitude</th>
         <th>Laitude Speed</th>
+        <th>Distance</th>
+        <th>Distance Speed</th>
       </tr>
+      <tbody id="result"></tbody>
     </table>
     <script>
       var signs = [
@@ -36,39 +75,54 @@
           "Pisces",
         ];
 
-      var start_ms = new Date().getTime();
+      calc();
 
-      $pl.setDate(2000, 7, 1, 0, 0, 0, 0);
-      $pl.getPositions();
+      function calc(){
+        var start_ms = new Date().getTime();
 
+        document.getElementById("result").innerHTML = "";
 
-      //var p = Pluto.getPlanetPosition();
-      //a.setGeoPosition(43, 135);
-      //var h = a.getHouse("K");
+        var year = document.getElementById("year").value;
+        var month = document.getElementById("month").value;
+        var day = document.getElementById("day").value;
+        var hour = document.getElementById("hour").value;
+        var minute = document.getElementById("minute").value;
+        var timezone = document.getElementById("timezone").value;
 
-      for(var i=0; i<$pl.planetNames.length; i++){
-        var planet = $pl.planetNames[i];
-        var text = "";
+        $pl.setDate(year, month, day, hour, minute, 0, timezone);
+        $pl.getPositions();
 
-        text += '<tr>';
-        text += '<td>' + planet + '</td>';
-        text += '<td>'+getDigit60($pl.planets[planet].longitude);
-        text += ' ('+($pl.planets[planet].longitude).toFixed(6)+')</td>';
-        text += '<td>'+getDigit60($pl.planets[planet].longitudeSpeed);
-        text += ' ('+($pl.planets[planet].longitudeSpeed).toFixed(6)+')</td>';
-        text += '<td>'+getDigit60($pl.planets[planet].latitude);
-        text += ' ('+($pl.planets[planet].latitude).toFixed(6)+')</td>';
-        text += '<td>'+getDigit60($pl.planets[planet].latitudeSpeed);
-        text += ' ('+($pl.planets[planet].latitudeSpeed).toFixed(6)+')</td>';
+        //var p = Pluto.getPlanetPosition();
+        //a.setGeoPosition(43, 135);
+        //var h = a.getHouse("K");
 
-        text += "</tr>";
+        for(var planet in $pl.planetNames){
+          var text = "";
 
-        document.getElementById("result").innerHTML += text;
+          text += '<tr>';
+          text += '<td>' + planet + '</td>';
+          text += '<td>'+getDigit60($pl.planets[planet].longitude);
+          text += ' ('+($pl.planets[planet].longitude).toFixed(6)+')</td>';
+          text += '<td>'+getDigit60($pl.planets[planet].longitudeSpeed);
+          text += ' ('+($pl.planets[planet].longitudeSpeed).toFixed(6)+')</td>';
+          text += '<td>'+getDigit60($pl.planets[planet].latitude);
+          text += ' ('+($pl.planets[planet].latitude).toFixed(6)+')</td>';
+          text += '<td>'+getDigit60($pl.planets[planet].latitudeSpeed);
+          text += ' ('+($pl.planets[planet].latitudeSpeed).toFixed(6)+')</td>';
+          text += '<td>'+getDigit60($pl.planets[planet].distance);
+          text += ' ('+($pl.planets[planet].distance).toFixed(6)+')</td>';
+          text += '<td>'+getDigit60($pl.planets[planet].distanceSpeed);
+          text += ' ('+($pl.planets[planet].distanceSpeed).toFixed(6)+')</td>';
+
+          text += "</tr>";
+
+          document.getElementById("result").innerHTML += text;
+        }
+        
+
+        var elapsed_ms = new Date().getTime() - start_ms;
+        console.log('処理時間：' + elapsed_ms);
       }
-      
-
-      var elapsed_ms = new Date().getTime() - start_ms;
-      console.log('処理時間：' + elapsed_ms);
 
       function getDigit60(degree){
         var minus = degree < 0 ? "-" : "";
