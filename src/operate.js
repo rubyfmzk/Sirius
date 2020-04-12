@@ -133,6 +133,7 @@ $pl.setGeoPosition = function(latitude, longitude){
 
 $pl.setHouseSystem = function(house){
   $pl.house = house;
+  return $pl.house;
 }
 
 $pl.getPositions = function(planet){
@@ -142,7 +143,6 @@ $pl.getPositions = function(planet){
     //var planet = $pl.planetNames[i];
     $pl._func.getPosition(planet);
   }
-  return $pl.planets;
 }
 
 $pl.getHouses = function(house){
@@ -152,6 +152,8 @@ $pl.getHouses = function(house){
   var ascmc = Array(10);
   $pl.swe.swe_houses($pl.julian_utc,$pl.iflag, $pl.latitude, $pl.longitude, $pl.house, cusp, ascmc, 0);
   $pl.houses = cusp;
+
+  return $pl.houses;
 }
 
 $pl._func = {
