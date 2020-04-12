@@ -16,6 +16,9 @@ $pl.setGeoPosition(latitude, longitude);
 var houses = $pl.getHouses(house);
 ```
 
+# Demo
+https://rubyfmzk.com/pluto/demo/
+
 # License
 GNU General Public License v2.0  
 https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
