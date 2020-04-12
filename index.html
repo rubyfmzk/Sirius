@@ -12,54 +12,13 @@
   </head>
   <body>
     <h1>Pluto.js</h1>
-    <table>
+    <table id="result">
       <tr>
-        <th>Item</th>
-        <th>Value</th>
-      </tr>
-      <tr>
-        <td>Sun</td>
-        <td id="sun"></td>
-      </tr>
-      <tr>
-        <td>Moon</td>
-        <td id="moon"></td>
-      </tr>
-      <tr>
-        <td>Mercury</td>
-        <td id="mercury"></td>
-      </tr>
-      <tr>
-        <td>Venus</td>
-        <td id="venus"></td>
-      </tr>
-      <tr>
-        <td>Mars</td>
-        <td id="mars"></td>
-      </tr>
-      <tr>
-        <td>Jupiter</td>
-        <td id="jupiter"></td>
-      </tr>
-      <tr>
-        <td>Saturn</td>
-        <td id="saturn"></td>
-      </tr>
-      <tr>
-        <td>uranus</td>
-        <td id="uranus"></td>
-      </tr>
-      <tr>
-        <td>Neptune</td>
-        <td id="neptune"></td>
-      </tr>
-      <tr>
-        <td>Pluto</td>
-        <td id="pluto"></td>
-      </tr>
-      <tr>
-        <td>Julian UTC</td>
-        <td id="julian_utc"></td>
+        <th>Planet</th>
+        <th>Longitude</th>
+        <th>Longitude Speed</th>
+        <th>Laitude</th>
+        <th>Laitude Speed</th>
       </tr>
     </table>
     <script>
@@ -80,32 +39,42 @@
 
       var start_ms = new Date().getTime();
 
-      $pl.setDate(2000, 1, 1, 0, 0, 0, 0);
-      $pl.getPosition("sun");
+      $pl.setDate(2000, 7, 1, 0, 0, 0, 0);
+      $pl.getPositions();
 
 
       //var p = Pluto.getPlanetPosition();
       //a.setGeoPosition(43, 135);
       //var h = a.getHouse("K");
 
-      document.getElementById('sun').innerText = $const.body.position.apparentLongitude+" ( "+getDigit60($const.body.position.apparentLongitude)+" )";
-/*
-    $('#moon').text(p.Moon.longitude+" ( "+getDigit60(p.Moon.longitude)+" )");
-    $('#mercury').text(p.Mercury.longitude);
-    $('#venus').text(p.Venus.longitude);
-    $('#mars').text(p.Mars.longitude);
-    $('#jupiter').text(p.Jupiter.longitude);
-    $('#saturn').text(p.Saturn.longitude);
-    $('#uranus').text(p.Uranus.longitude);
-    $('#neptune').text(p.Neptune.longitude+" ( "+getDigit60(p.Neptune.longitude)+" )");
-    $('#pluto').text(p.Pluto.longitude+" ( "+getDigit60(p.Pluto.longitude)+" )");
-    $('#julian_utc').text(pl.julian_utc);
-*/
-    var elapsed_ms = new Date().getTime() - start_ms;
-    console.log('処理時間：' + elapsed_ms);
+      for(var i=0; i<$pl.planetNames.length; i++){
+        var planet = $pl.planetNames[i];
+        var text = "";
 
-    function getDigit60(degree){
-      return parseInt(degree) + "° " + parseInt(degree % 1 * 60) + "' " + degree * 60 % 1 * 60;
-    }
+        text += '<tr>';
+        text += '<td>' + planet + '</td>';
+        text += '<td>'+getDigit60($pl.planets[planet].longitude);
+        text += ' ('+($pl.planets[planet].longitude).toFixed(6)+')</td>';
+        text += '<td>'+getDigit60($pl.planets[planet].longitudeSpeed);
+        text += ' ('+($pl.planets[planet].longitudeSpeed).toFixed(6)+')</td>';
+        text += '<td>'+getDigit60($pl.planets[planet].latitude);
+        text += ' ('+($pl.planets[planet].latitude).toFixed(6)+')</td>';
+        text += '<td>'+getDigit60($pl.planets[planet].latitudeSpeed);
+        text += ' ('+($pl.planets[planet].latitudeSpeed).toFixed(6)+')</td>';
+
+        text += "</tr>";
+
+        document.getElementById("result").innerHTML += text;
+      }
+      
+
+      var elapsed_ms = new Date().getTime() - start_ms;
+      console.log('処理時間：' + elapsed_ms);
+
+      function getDigit60(degree){
+        var minus = degree < 0 ? "-" : "";
+        degree = Math.abs(degree);
+        return minus + parseInt(degree) + "° " + parseInt(degree % 1 * 60) + "' " + (degree * 60 % 1 * 60 ).toFixed(4);
+      }
     </script>
   </body>
