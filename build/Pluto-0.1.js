@@ -26671,15 +26671,23 @@ class SwissEph{
 };
 
 /*
-Pluto.js ver0.0
-Pluto.js is ephemeris calculator for Sun, Moon and Planets.
+  Pluto.js version 0.1
 
-Licensed under GNU General Public License v2.0
+  Pluto.js is ephemeris calculator for Sun, Moon and Planets.
+  This file is made from the Swiss Ephemeris Free Edition,
+  Version 2.00.00 of Astrodienst AG, Switzerland
+  from the original C Code to JAVA and JAVA to JavaScript.
 
-Copyright 2020- Ruby Fumizuki
-https://rubyfmzk.com
-https://github.com/rubyfmzk/Y2J
-rubyfmzk@gmail.com
+  For any questions or comments regarding this port to JavaScript,
+  you should ONLY contact me and not Astrodienst,
+  as the Astrodienst AG is not involved in this port in any way.
+
+  Licensed under GNU General Public License v2.0
+
+  Copyright 2020- Ruby Fumizuki
+  https://rubyfmzk.com
+  https://github.com/rubyfmzk/Y2J
+  rubyfmzk@gmail.com
 */
 $pl = {};
 
@@ -26692,10 +26700,12 @@ $pl.timezone = (function(){
 })();
 
 $pl.planets = {};
+$pl.houses = {};
 $pl.iflag = Swe.SEFLG_MOSEPH|Swe.SEFLG_SPEED;
 $pl.julian_utc = 0;
 $pl.longitude = 0;
 $pl.latitude = 0;
+$pl.house = "";
 
 $pl.planetNames = {
   Sun: Swe.SE_SUN,
@@ -26786,6 +26796,17 @@ $pl.getUtcDate = function(){
   return res;
 }
 
+$pl.setGeoPosition = function(latitude, longitude){
+  latitude = parseFloat(latitude);
+  longitude = parseFloat(longitude);
+  if(latitude > -90 && latitude < 90) $pl.latitude = latitude;
+  if(longitude > -180 && longitude < 180) $pl.longitude = longitude;
+}
+
+$pl.setHouseSystem = function(house){
+  $pl.house = house;
+}
+
 $pl.getPositions = function(planet){
   $pl.planets = {};
 
@@ -26796,10 +26817,24 @@ $pl.getPositions = function(planet){
   return $pl.planets;
 }
 
+$pl.getHouses = function(house){
+  if($pl._func.isset(house)) $pl.house = house;
+
+  var cusp = Array(13);
+  var ascmc = Array(10);
+  $pl.swe.swe_houses($pl.julian_utc,$pl.iflag, $pl.latitude, $pl.longitude, $pl.house, cusp, ascmc, 0);
+  $pl.houses = cusp;
+}
+
 $pl._func = {
   isNull: function(val){
     if(val === null || val === undefined) return true;
     return false;
+  },
+
+  isset: function(val){
+    if(val === null || val === undefined) return false;
+    return true;
   },
 
   getPosition: function(planet){

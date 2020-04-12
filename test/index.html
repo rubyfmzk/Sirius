@@ -4,127 +4,210 @@
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <meta http-equiv="Content-Script-Type" content="text/javascript">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <!--link rel="stylesheet" href="/css/reset.css"-->
-    <script type="text/javascript" src="../src/Swe.js"></script>
-    <script type="text/javascript" src="../src/Classes.js"></script>
-    <script type="text/javascript" src="../src/Swenut2000.js"></script>
-    <script type="text/javascript" src="../src/SwephData.js"></script>
-    <script type="text/javascript" src="../src/SwissData.js"></script>
-    <script type="text/javascript" src="../src/SweDate.js"></script>
-    <script type="text/javascript" src="../src/SwissLib.js"></script>
-    <script type="text/javascript" src="../src/Swemmoon.js"></script>
+    <script type="text/javascript" src="../src/swisseph/Swe.js"></script>
+    <script type="text/javascript" src="../src/swisseph/Classes.js"></script>
+    <script type="text/javascript" src="../src/swisseph/Swenut2000.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwephData.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwissData.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SweDate.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwissLib.js"></script>
+    <script type="text/javascript" src="../src/swisseph/Swemmoon.js"></script>
 
-    <script type="text/javascript" src="../src/SwemptabMer.js"></script>
-    <script type="text/javascript" src="../src/SwemptabVen.js"></script>
-    <script type="text/javascript" src="../src/SwemptabEar.js"></script>
-    <script type="text/javascript" src="../src/SwemptabMar.js"></script>
-    <script type="text/javascript" src="../src/SwemptabJup.js"></script>
-    <script type="text/javascript" src="../src/SwemptabSat.js"></script>
-    <script type="text/javascript" src="../src/SwemptabUra.js"></script>
-    <script type="text/javascript" src="../src/SwemptabNep.js"></script>
-    <script type="text/javascript" src="../src/SwemptabPlu.js"></script>
-    <script type="text/javascript" src="../src/SwephMosh.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwemptabMer.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwemptabVen.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwemptabEar.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwemptabMar.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwemptabJup.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwemptabSat.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwemptabUra.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwemptabNep.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwemptabPlu.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwephMosh.js"></script>
 
-    <script type="text/javascript" src="../src/SweHouse.js"></script>
-    <script type="text/javascript" src="../src/Swecl.js"></script>
-    <script type="text/javascript" src="../src/SwissEph.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SweHouse.js"></script>
+    <script type="text/javascript" src="../src/swisseph/Swecl.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwissEph.js"></script>
 
-   <script type="text/javascript" src="../src/Pluto.js"></script> 
-    <title>Pluto.js</title>
+   <script type="text/javascript" src="../src/operate.js"></script> 
+    <title>Pluto.js Demo</title>
+    <style>
+      input{
+        width: 50px;
+      }
+      input[type=radio]{
+        width: 25px;
+      }
+      button{
+        border: solid 2px #c0d2d2;
+        border-radius: 4px;
+        padding: 8px 30px;
+        font-size: 15px;
+        cursor: pointer;
+      }
+      #planet_result tr:nth-child(even), #house_result tr:nth-child(even){
+        background: #e3f7f7;
+      }
+      #planet_result td, #house_result td{
+        vertical-align: top;
+        padding: 0 10px;
+      }
+    </style>
   </head>
   <body>
-    <h1>Pluto.js</h1>
+    <h1>Pluto.js Demo</h1>
     <table>
       <tr>
-        <th>Item</th>
-        <th>Value</th>
+        <td>Year-Month-Day</td>
+        <td>
+          <input id="year" value="2000"> -
+          <input id="month" value="1"> -
+          <input id="day" value="1">
+        </td>
       </tr>
       <tr>
-        <td>Sun</td>
-        <td id="sun"></td>
+        <td>Hour:Minute</td>
+        <td>
+          <input id="hour" value="0"> :
+          <input id="minute" value="0">
+        </td>
       </tr>
       <tr>
-        <td>Moon</td>
-        <td id="moon"></td>
+        <td>Timezone</td>
+        <td>
+          <input id="timezone" value="0">
+        </td>
       </tr>
       <tr>
-        <td>Mercury</td>
-        <td id="mercury"></td>
+        <td>Latitude / Longitude</td>
+        <td>
+          <input id="latitude" value="0"> /
+          <input id="longitude" value="0">
+        </td>
       </tr>
       <tr>
-        <td>Venus</td>
-        <td id="venus"></td>
-      </tr>
-      <tr>
-        <td>Mars</td>
-        <td id="mars"></td>
-      </tr>
-      <tr>
-        <td>Jupiter</td>
-        <td id="jupiter"></td>
-      </tr>
-      <tr>
-        <td>Saturn</td>
-        <td id="saturn"></td>
-      </tr>
-      <tr>
-        <td>uranus</td>
-        <td id="uranus"></td>
-      </tr>
-      <tr>
-        <td>Neptune</td>
-        <td id="neptune"></td>
-      </tr>
-      <tr>
-        <td>Pluto</td>
-        <td id="pluto"></td>
-      </tr>
-      <tr>
-        <td>Julian UTC</td>
-        <td id="julian_utc"></td>
+        <td>House System</td>
+        <td>
+          <input type="radio" value="" class="house_system" name="house_system" id="house_system_" checked=""><span class="house_system">Placidus</span>
+          <input type="radio" value="K" class="house_system" name="house_system" id="house_system_K"><span class="house_system">Koch</span>
+          <input type="radio" value="C" class="house_system" name="house_system" id="house_system_C"><span class="house_system">Campanus</span>
+          <input type="radio" value="R" class="house_system" name="house_system" id="house_system_R"><span class="house_system">Regiomontanus</span>
+          <input type="radio" value="E" class="house_system" name="house_system" id="house_system_E"><span class="house_system">Equal</span>
+          <input type="radio" value="W" class="house_system" name="house_system" id="house_system_W"><span class="house_system">Whole Sign</span>
+          <input type="radio" value="T" class="house_system" name="house_system" id="house_system_T"><span class="house_system">Topocentric</span>
+          <input type="radio" value="M" class="house_system" name="house_system" id="house_system_M"><span class="house_system">Morinus</span>
+          <input type="radio" value="X" class="house_system" name="house_system" id="house_system_X"><span class="house_system">Meridian</span>
+          <input type="radio" value="O" class="house_system" name="house_system" id="house_system_O"><span class="house_system">Porphyry</span>
+        </td>
       </tr>
     </table>
+
+    <button onclick="calc();">Calculate</button>
+
+    <h2>Planet Result</h2>
+    <table>
+      <tr>
+        <th>Planet</th>
+        <th>Longitude</th>
+        <th>Longitude Speed</th>
+        <th>Laitude</th>
+        <th>Laitude Speed</th>
+        <th>Distance</th>
+        <th>Distance Speed</th>
+      </tr>
+      <tbody id="planet_result"></tbody>
+    </table>
+
+    <h2>House Result</h2>
+    <table>
+      <tr>
+        <th>House</th>
+        <th>Longitude</th>
+      </tr>
+      <tbody id="house_result"></tbody>
+    </table>
+
     <script>
       var signs = [
-        "Aries",
-        "Tauros",
-        "Gemini",
-        "Cancer",
-        "Leo",
-        "Virgo",
-        "Libra",
-        "Scopio",
-        "Sagiterius",
-        "Capricorn",
-        "Aquarius",
-        "Pisces",
-      ];
+          "Aries",
+          "Tauros",
+          "Gemini",
+          "Cancer",
+          "Leo",
+          "Virgo",
+          "Libra",
+          "Scopio",
+          "Sagiterius",
+          "Capricorn",
+          "Aquarius",
+          "Pisces",
+        ];
 
-    Pluto.setDate(2000, 1, 1, 0, 0, 0);
+      calc();
 
-    var start_ms = new Date().getTime();
-    var p = Pluto.getPlanetPosition();
-//    a.setGeoPosition(43, 135);
-//    var h = a.getHouse("K");
+      function calc(){
+        var start_ms = new Date().getTime();
 
-    $('#sun').text(p.Sun.longitude+" ( "+getDigit60(p.Sun.longitude)+" )");
-    $('#moon').text(p.Moon.longitude+" ( "+getDigit60(p.Moon.longitude)+" )");
-    $('#mercury').text(p.Mercury.longitude);
-    $('#venus').text(p.Venus.longitude);
-    $('#mars').text(p.Mars.longitude);
-    $('#jupiter').text(p.Jupiter.longitude);
-    $('#saturn').text(p.Saturn.longitude);
-    $('#uranus').text(p.Uranus.longitude);
-    $('#neptune').text(p.Neptune.longitude+" ( "+getDigit60(p.Neptune.longitude)+" )");
-    $('#pluto').text(p.Pluto.longitude+" ( "+getDigit60(p.Pluto.longitude)+" )");
-    $('#julian_utc').text(pl.julian_utc);
+        document.getElementById("planet_result").innerHTML = "";
+        document.getElementById("house_result").innerHTML = "";
 
-    var elapsed_ms = new Date().getTime() - start_ms;
-    console.log('処理時間：' + elapsed_ms);
+        var year = document.getElementById("year").value;
+        var month = document.getElementById("month").value;
+        var day = document.getElementById("day").value;
+        var hour = document.getElementById("hour").value;
+        var minute = document.getElementById("minute").value;
+        var timezone = document.getElementById("timezone").value;
+        var latitude = document.getElementById("latitude").value;
+        var longitude = document.getElementById("longitude").value;
+        var house = document.querySelector(".house_system:checked").value;
 
-    function getDigit60(degree){
-      return parseInt(degree) + "° " + parseInt(degree % 1 * 60) + "' " + degree * 60 % 1 * 60;
-    }
+        $pl.setDate(year, month, day, hour, minute, 0, timezone);
+        $pl.getPositions();
+
+        $pl.setGeoPosition(latitude, longitude);
+        $pl.getHouses(house);
+
+        for(var planet in $pl.planetNames){
+          var text = "";
+
+          text += '<tr>';
+          text += '<td>' + planet + '</td>';
+          text += '<td>'+getDigit60($pl.planets[planet].longitude);
+          text += ' ('+($pl.planets[planet].longitude).toFixed(6)+')</td>';
+          text += '<td>'+getDigit60($pl.planets[planet].longitudeSpeed);
+          text += ' ('+($pl.planets[planet].longitudeSpeed).toFixed(6)+')</td>';
+          text += '<td>'+getDigit60($pl.planets[planet].latitude);
+          text += ' ('+($pl.planets[planet].latitude).toFixed(6)+')</td>';
+          text += '<td>'+getDigit60($pl.planets[planet].latitudeSpeed);
+          text += ' ('+($pl.planets[planet].latitudeSpeed).toFixed(6)+')</td>';
+          text += '<td>'+($pl.planets[planet].distance).toFixed(6)+'</td>';
+          text += '<td>'+($pl.planets[planet].distanceSpeed).toFixed(6)+'</td>';
+          text += "</tr>";
+
+          document.getElementById("planet_result").innerHTML += text;
+        } 
+
+
+        for(var i=1; i<=12; i++){
+          var text = "";
+
+          text += '<tr>';
+          text += '<td>House ' + i + '</td>';
+          text += '<td>'+getDigit60($pl.houses[i]);
+          text += ' ('+$pl.houses[i].toFixed(6)+')</td>';
+          text += "</tr>";
+
+          document.getElementById("house_result").innerHTML += text;
+        }
+
+        var elapsed_ms = new Date().getTime() - start_ms;
+        console.log('seconds：' + elapsed_ms);
+      }
+
+      function getDigit60(degree){
+        var minus = degree < 0 ? "-" : "";
+        degree = Math.abs(degree);
+        return minus + parseInt(degree) + "° " + parseInt(degree % 1 * 60) + "' " + (degree * 60 % 1 * 60 ).toFixed(4);
+      }
     </script>
   </body>
+</html>
