@@ -8,9 +8,9 @@ from the original C Code to JAVA and JAVA to JavaScript.
 GNU General Public License v2.0
 
 # Contributers
-## original C Code
+### original C Code
 ASTRO DIENST
 https://www.astro.com/swisseph/
-## C Code to JAVA
+### C Code to JAVA
 Thomas Mack
 http://www.th-mack.de/international/download/
