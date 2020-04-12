@@ -161,26 +161,26 @@
         var house = document.querySelector(".house_system:checked").value;
 
         $pl.setDate(year, month, day, hour, minute, 0, timezone);
-        $pl.getPositions();
+        var planets = $pl.getPlanets();
 
         $pl.setGeoPosition(latitude, longitude);
-        $pl.getHouses(house);
+        var houses = $pl.getHouses(house);
 
         for(var planet in $pl.planetNames){
           var text = "";
 
           text += '<tr>';
           text += '<td>' + planet + '</td>';
-          text += '<td>'+getDigit60($pl.planets[planet].longitude);
-          text += ' ('+($pl.planets[planet].longitude).toFixed(6)+')</td>';
-          text += '<td>'+getDigit60($pl.planets[planet].longitudeSpeed);
-          text += ' ('+($pl.planets[planet].longitudeSpeed).toFixed(6)+')</td>';
-          text += '<td>'+getDigit60($pl.planets[planet].latitude);
-          text += ' ('+($pl.planets[planet].latitude).toFixed(6)+')</td>';
-          text += '<td>'+getDigit60($pl.planets[planet].latitudeSpeed);
-          text += ' ('+($pl.planets[planet].latitudeSpeed).toFixed(6)+')</td>';
-          text += '<td>'+($pl.planets[planet].distance).toFixed(6)+'</td>';
-          text += '<td>'+($pl.planets[planet].distanceSpeed).toFixed(6)+'</td>';
+          text += '<td>'+getDigit60(planets[planet].longitude);
+          text += ' ('+(planets[planet].longitude).toFixed(6)+')</td>';
+          text += '<td>'+getDigit60(planets[planet].longitudeSpeed);
+          text += ' ('+(planets[planet].longitudeSpeed).toFixed(6)+')</td>';
+          text += '<td>'+getDigit60(planets[planet].latitude);
+          text += ' ('+(planets[planet].latitude).toFixed(6)+')</td>';
+          text += '<td>'+getDigit60(planets[planet].latitudeSpeed);
+          text += ' ('+(planets[planet].latitudeSpeed).toFixed(6)+')</td>';
+          text += '<td>'+(planets[planet].distance).toFixed(6)+'</td>';
+          text += '<td>'+(planets[planet].distanceSpeed).toFixed(6)+'</td>';
           text += "</tr>";
 
           document.getElementById("planet_result").innerHTML += text;
@@ -192,8 +192,8 @@
 
           text += '<tr>';
           text += '<td>House ' + i + '</td>';
-          text += '<td>'+getDigit60($pl.houses[i]);
-          text += ' ('+$pl.houses[i].toFixed(6)+')</td>';
+          text += '<td>'+getDigit60(houses[i]);
+          text += ' ('+houses[i].toFixed(6)+')</td>';
           text += "</tr>";
 
           document.getElementById("house_result").innerHTML += text;

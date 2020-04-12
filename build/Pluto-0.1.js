@@ -26808,13 +26808,14 @@ $pl.setHouseSystem = function(house){
   return $pl.house;
 }
 
-$pl.getPositions = function(planet){
+$pl.getPlanets = function(planet){
   $pl.planets = {};
 
   for(var planet in $pl.planetNames){
-    //var planet = $pl.planetNames[i];
-    $pl._func.getPosition(planet);
+    $pl._func.getPlanetsPosition(planet);
   }
+
+  return $pl.planets;
 }
 
 $pl.getHouses = function(house){
@@ -26839,7 +26840,7 @@ $pl._func = {
     return true;
   },
 
-  getPosition: function(planet){
+  getPlanetsPosition: function(planet){
     var ret = {};
     var ret_matrix = new Array(6);
 

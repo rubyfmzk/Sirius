@@ -138,10 +138,10 @@
         var house = document.querySelector(".house_system:checked").value;
 
         $pl.setDate(year, month, day, hour, minute, 0, timezone);
-        $pl.getPositions();
+        var planets = $pl.getPlanets();
 
         $pl.setGeoPosition(latitude, longitude);
-        $pl.getHouses(house);
+        var houses = $pl.getHouses(house);
 
         for(var planet in $pl.planetNames){
           var text = "";
@@ -169,8 +169,8 @@
 
           text += '<tr>';
           text += '<td>House ' + i + '</td>';
-          text += '<td>'+getDigit60($pl.houses[i]);
-          text += ' ('+$pl.houses[i].toFixed(6)+')</td>';
+          text += '<td>'+getDigit60(houses[i]);
+          text += ' ('+houses[i].toFixed(6)+')</td>';
           text += "</tr>";
 
           document.getElementById("house_result").innerHTML += text;
