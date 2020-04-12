@@ -4,6 +4,18 @@ This file is made from the Swiss Ephemeris Free Edition,
 Version 2.00.00 of Astrodienst AG, Switzerland  
 from the original C Code to JAVA and JAVA to JavaScript.  
 
+# Example
+### Planets' position
+```
+$pl.setDate(year, month, day, hour, minute, second, timezone);
+var planetPositions = $pl.getPositions();
+```
+### Houses
+```
+$pl.setGeoPosition(latitude, longitude);
+var houses = $pl.getHouses(house);
+```
+
 # License
 GNU General Public License v2.0  
 https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
