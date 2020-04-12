@@ -1,7 +1,6 @@
 copyright.txt
 moshier/index.js
 moshier/common.js
-moshier/load.js
 moshier/astronomy/index.js
 moshier/astronomy/moshier/index.js
 moshier/astronomy/moshier/constant.js
