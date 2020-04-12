@@ -1,3 +1,14 @@
+/*
+Pluto.js ver0.0
+Pluto.js is ephemeris calculator for Sun, Moon and Planets.
+
+Licensed under GNU General Public License v2.0
+
+Copyright 2020- Ruby Fumizuki
+https://rubyfmzk.com
+https://github.com/rubyfmzk/Y2J
+rubyfmzk@gmail.com
+*/
 $pl = {};
 
 $pl.swe = new SwissEph();

@@ -7,10 +7,12 @@
     <!--link rel="stylesheet" href="/css/reset.css"-->
 
     <script type="text/javascript" src="Pluto.js"></script> 
-    <script type="text/javascript" src="src/operate.js"></script> 
     <title>Pluto.js</title>
 
     <style>
+      input{
+        width: 50px;
+      }
       #result tr:nth-child(even){
         background: #eef;
       }
@@ -109,10 +111,8 @@
           text += ' ('+($pl.planets[planet].latitude).toFixed(6)+')</td>';
           text += '<td>'+getDigit60($pl.planets[planet].latitudeSpeed);
           text += ' ('+($pl.planets[planet].latitudeSpeed).toFixed(6)+')</td>';
-          text += '<td>'+getDigit60($pl.planets[planet].distance);
-          text += ' ('+($pl.planets[planet].distance).toFixed(6)+')</td>';
-          text += '<td>'+getDigit60($pl.planets[planet].distanceSpeed);
-          text += ' ('+($pl.planets[planet].distanceSpeed).toFixed(6)+')</td>';
+          text += '<td>'+($pl.planets[planet].distance).toFixed(6)+'</td>';
+          text += '<td>'+($pl.planets[planet].distanceSpeed).toFixed(6)+'</td>';
 
           text += "</tr>";
 
