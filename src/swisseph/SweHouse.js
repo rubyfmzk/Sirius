@@ -1,5 +1,5 @@
 /*
-  Pluto.js version 0.1
+  Pluto.js version 0.2
 
   Pluto.js is ephemeris calculator for Sun, Moon and Planets.
   This file is made from the Swiss Ephemeris Free Edition,
@@ -420,7 +420,7 @@ class SweHouse{
     }
     if (ihs == 'W')  /* whole sign houses: treat as 'E' and fix later */
       ihs2 = 'E';
-    retc = swe_houses_armc(armc, lat, eps, ihs2, cusp, ascmc, aOffs);
+    retc = this.swe_houses_armc(armc, lat, eps, ihs2, cusp, ascmc, aOffs);
     for (i = 1; i <= ito; i++)
       cusp[i] = this.sl.swe_degnorm(cusp[i] - ay - nutl);
       if (ihs == 'W') /* whole sign houses */
