@@ -4,8 +4,31 @@
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <meta http-equiv="Content-Script-Type" content="text/javascript">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <script type="text/javascript" src="../src/swisseph/Swe.js"></script>
+    <script type="text/javascript" src="../src/swisseph/Classes.js"></script>
+    <script type="text/javascript" src="../src/swisseph/Swenut2000.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwephData.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwissData.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SweDate.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwissLib.js"></script>
+    <script type="text/javascript" src="../src/swisseph/Swemmoon.js"></script>
 
-    <script type="text/javascript" src="Pluto.js"></script> 
+    <script type="text/javascript" src="../src/swisseph/SwemptabMer.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwemptabVen.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwemptabEar.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwemptabMar.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwemptabJup.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwemptabSat.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwemptabUra.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwemptabNep.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwemptabPlu.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwephMosh.js"></script>
+
+    <script type="text/javascript" src="../src/swisseph/SweHouse.js"></script>
+    <script type="text/javascript" src="../src/swisseph/Swecl.js"></script>
+    <script type="text/javascript" src="../src/swisseph/SwissEph.js"></script>
+
+   <script type="text/javascript" src="../src/operate.js"></script> 
     <title>Pluto.js Demo</title>
     <style>
       input{
@@ -39,29 +62,29 @@
       <tr>
         <td>Year-Month-Day</td>
         <td>
-          <input id="year" value="2000"> -
-          <input id="month" value="1"> -
-          <input id="day" value="1">
+          <input id="year" value="1985"> -
+          <input id="month" value="7"> -
+          <input id="day" value="2">
         </td>
       </tr>
       <tr>
         <td>Hour:Minute</td>
         <td>
-          <input id="hour" value="0"> :
-          <input id="minute" value="0">
+          <input id="hour" value="9"> :
+          <input id="minute" value="57">
         </td>
       </tr>
       <tr>
         <td>Timezone</td>
         <td>
-          <input id="timezone" value="0">
+          <input id="timezone" value="9">
         </td>
       </tr>
       <tr>
         <td>Latitude / Longitude</td>
         <td>
-          <input id="latitude" value="0"> /
-          <input id="longitude" value="0">
+          <input id="latitude" value="43.12"> /
+          <input id="longitude" value="141.23">
         </td>
       </tr>
       <tr>
@@ -172,16 +195,16 @@
 
           text += '<tr>';
           text += '<td>' + planet + '</td>';
-          text += '<td>'+getDigit60($pl.planets[planet].longitude);
-          text += ' ('+($pl.planets[planet].longitude).toFixed(6)+')</td>';
-          text += '<td>'+getDigit60($pl.planets[planet].longitudeSpeed);
-          text += ' ('+($pl.planets[planet].longitudeSpeed).toFixed(6)+')</td>';
-          text += '<td>'+getDigit60($pl.planets[planet].latitude);
-          text += ' ('+($pl.planets[planet].latitude).toFixed(6)+')</td>';
-          text += '<td>'+getDigit60($pl.planets[planet].latitudeSpeed);
-          text += ' ('+($pl.planets[planet].latitudeSpeed).toFixed(6)+')</td>';
-          text += '<td>'+($pl.planets[planet].distance).toFixed(6)+'</td>';
-          text += '<td>'+($pl.planets[planet].distanceSpeed).toFixed(6)+'</td>';
+          text += '<td>'+getDigit60(planets[planet].longitude);
+          text += ' ('+(planets[planet].longitude).toFixed(6)+')</td>';
+          text += '<td>'+getDigit60(planets[planet].longitudeSpeed);
+          text += ' ('+(planets[planet].longitudeSpeed).toFixed(6)+')</td>';
+          text += '<td>'+getDigit60(planets[planet].latitude);
+          text += ' ('+(planets[planet].latitude).toFixed(6)+')</td>';
+          text += '<td>'+getDigit60(planets[planet].latitudeSpeed);
+          text += ' ('+(planets[planet].latitudeSpeed).toFixed(6)+')</td>';
+          text += '<td>'+(planets[planet].distance).toFixed(6)+'</td>';
+          text += '<td>'+(planets[planet].distanceSpeed).toFixed(6)+'</td>';
           text += "</tr>";
 
           document.getElementById("planet_result").innerHTML += text;

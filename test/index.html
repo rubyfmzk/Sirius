@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Script-Type" content="text/javascript">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <script type="text/javascript" src="../src/swisseph/Swe.js"></script>
+    <script type="text/javascript" src="../src/swisseph/FixStars.js"></script>
     <script type="text/javascript" src="../src/swisseph/Classes.js"></script>
     <script type="text/javascript" src="../src/swisseph/Swenut2000.js"></script>
     <script type="text/javascript" src="../src/swisseph/SwephData.js"></script>
@@ -35,6 +36,9 @@
         width: 50px;
       }
       input[type=radio]{
+        width: 25px;
+      }
+      input[type="checkbox"]{
         width: 25px;
       }
       button{
@@ -82,6 +86,13 @@
         <td>
           <input id="latitude" value="0"> /
           <input id="longitude" value="0">
+        </td>
+      </tr>
+      <tr>
+        <td>Type</td>
+        <td>
+          <input id="siderial" type="checkbox">Siderial
+          <input id="heliocentric" type="checkbox">Heliocentric
         </td>
       </tr>
       <tr>
@@ -160,27 +171,42 @@
         var longitude = document.getElementById("longitude").value;
         var house = document.querySelector(".house_system:checked").value;
 
+        if(document.getElementById("siderial").checked){
+          $pl.setSiderial();
+        }
+        else{
+          $pl.unsetSiderial();
+        }
+
+        if(document.getElementById("heliocentric").checked){
+          $pl.setHeliocentric();
+        }
+        else{
+          $pl.unsetHeliocentric();
+        }
+
+
         $pl.setDate(year, month, day, hour, minute, 0, timezone);
-        $pl.getPositions();
+        var planets = $pl.getPlanets();
 
         $pl.setGeoPosition(latitude, longitude);
-        $pl.getHouses(house);
+        var houses = $pl.getHouses(house);
 
         for(var planet in $pl.planetNames){
           var text = "";
 
           text += '<tr>';
           text += '<td>' + planet + '</td>';
-          text += '<td>'+getDigit60($pl.planets[planet].longitude);
-          text += ' ('+($pl.planets[planet].longitude).toFixed(6)+')</td>';
-          text += '<td>'+getDigit60($pl.planets[planet].longitudeSpeed);
-          text += ' ('+($pl.planets[planet].longitudeSpeed).toFixed(6)+')</td>';
-          text += '<td>'+getDigit60($pl.planets[planet].latitude);
-          text += ' ('+($pl.planets[planet].latitude).toFixed(6)+')</td>';
-          text += '<td>'+getDigit60($pl.planets[planet].latitudeSpeed);
-          text += ' ('+($pl.planets[planet].latitudeSpeed).toFixed(6)+')</td>';
-          text += '<td>'+($pl.planets[planet].distance).toFixed(6)+'</td>';
-          text += '<td>'+($pl.planets[planet].distanceSpeed).toFixed(6)+'</td>';
+          text += '<td>'+getDigit60(planets[planet].longitude);
+          text += ' ('+(planets[planet].longitude).toFixed(6)+')</td>';
+          text += '<td>'+getDigit60(planets[planet].longitudeSpeed);
+          text += ' ('+(planets[planet].longitudeSpeed).toFixed(6)+')</td>';
+          text += '<td>'+getDigit60(planets[planet].latitude);
+          text += ' ('+(planets[planet].latitude).toFixed(6)+')</td>';
+          text += '<td>'+getDigit60(planets[planet].latitudeSpeed);
+          text += ' ('+(planets[planet].latitudeSpeed).toFixed(6)+')</td>';
+          text += '<td>'+(planets[planet].distance).toFixed(6)+'</td>';
+          text += '<td>'+(planets[planet].distanceSpeed).toFixed(6)+'</td>';
           text += "</tr>";
 
           document.getElementById("planet_result").innerHTML += text;
@@ -192,8 +218,8 @@
 
           text += '<tr>';
           text += '<td>House ' + i + '</td>';
-          text += '<td>'+getDigit60($pl.houses[i]);
-          text += ' ('+$pl.houses[i].toFixed(6)+')</td>';
+          text += '<td>'+getDigit60(houses[i]);
+          text += ' ('+houses[i].toFixed(6)+')</td>';
           text += "</tr>";
 
           document.getElementById("house_result").innerHTML += text;
