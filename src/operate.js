@@ -1,5 +1,5 @@
 /*
-  Pluto.js version 0.1
+  Pluto.js version 0.2
 
   Pluto.js is ephemeris calculator for Sun, Moon and Planets.
   This file is made from the Swiss Ephemeris Free Edition,
@@ -46,6 +46,7 @@ $pl.planetNames = {
   Uranus: Swe.SE_URANUS,
   Neptune: Swe.SE_NEPTUNE,
   Pluto: Swe.SE_PLUTO,
+  Earth: Swe.SE_EARTH,
   //MeanNode: Swe.SE_MEAN_NODE,
   //TrueNode: Swe.SE_TRUE_NODE,
   //Chiron: Swe.SE_CHIRON, 
@@ -136,13 +137,14 @@ $pl.setHouseSystem = function(house){
   return $pl.house;
 }
 
-$pl.getPositions = function(planet){
+$pl.getPlanets = function(planet){
   $pl.planets = {};
 
   for(var planet in $pl.planetNames){
-    //var planet = $pl.planetNames[i];
-    $pl._func.getPosition(planet);
+    $pl._func.getPlanetsPosition(planet);
   }
+
+  return $pl.planets;
 }
 
 $pl.getHouses = function(house){
@@ -156,6 +158,22 @@ $pl.getHouses = function(house){
   return $pl.houses;
 }
 
+$pl.setSiderial = function(){
+  $pl.iflag = $pl.iflag | Swe.SEFLG_SIDEREAL;
+}
+
+$pl.unsetSiderial = function(){
+  $pl.iflag = ($pl.iflag | Swe.SEFLG_SIDEREAL) ^ Swe.SEFLG_SIDEREAL;
+}
+
+$pl.setHeliocentric = function(){
+  $pl.iflag = $pl.iflag | Swe.SEFLG_HELCTR;
+}
+
+$pl.unsetHeliocentric = function(){
+  $pl.iflag = ($pl.iflag | Swe.SEFLG_HELCTR) ^ Swe.SEFLG_HELCTR;
+}
+
 $pl._func = {
   isNull: function(val){
     if(val === null || val === undefined) return true;
@@ -167,7 +185,7 @@ $pl._func = {
     return true;
   },
 
-  getPosition: function(planet){
+  getPlanetsPosition: function(planet){
     var ret = {};
     var ret_matrix = new Array(6);
 
