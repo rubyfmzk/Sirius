@@ -1,5 +1,6 @@
 copyright.txt
 swisseph/Swe.js
+swisseph/FixStars.js
 swisseph/Classes.js
 swisseph/Swenut2000.js
 swisseph/SwephData.js

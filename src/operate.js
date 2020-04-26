@@ -36,6 +36,7 @@ $pl.latitude = 0;
 $pl.house = "";
 
 $pl.planetNames = {
+
   Sun: Swe.SE_SUN,
   Moon: Swe.SE_MOON,
   Mercury: Swe.SE_MERCURY,
@@ -49,8 +50,8 @@ $pl.planetNames = {
   Earth: Swe.SE_EARTH,
   TrueNode: Swe.SE_TRUE_NODE,
   MeanNode: Swe.SE_MEAN_NODE,
+  Lilith: Swe.SE_MEAN_APOG,
   //Chiron: Swe.SE_CHIRON, 
-  //Lilith: Swe.SE_MEAN_APOG,
   //Juno: Swe.SE_JUNO,
 };
 
@@ -158,12 +159,19 @@ $pl.getHouses = function(house){
   return $pl.houses;
 }
 
-$pl.setSiderial = function(){
+$pl.setSiderial = function(siderialType){
+  if(!siderialType) siderialType = 0;
+
   $pl.iflag = $pl.iflag | Swe.SEFLG_SIDEREAL;
+  $pl.swe.swe_set_sid_mode(siderialType,0,0);
 }
 
 $pl.unsetSiderial = function(){
   $pl.iflag = ($pl.iflag | Swe.SEFLG_SIDEREAL) ^ Swe.SEFLG_SIDEREAL;
+}
+
+$pl.getAyanamsha = function(){
+  return $pl.swe.swe_get_ayanamsa($pl.julian_utc);
 }
 
 $pl.setHeliocentric = function(){
@@ -173,6 +181,7 @@ $pl.setHeliocentric = function(){
 $pl.unsetHeliocentric = function(){
   $pl.iflag = ($pl.iflag | Swe.SEFLG_HELCTR) ^ Swe.SEFLG_HELCTR;
 }
+
 
 $pl._func = {
   isNull: function(val){
