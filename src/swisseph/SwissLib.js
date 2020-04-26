@@ -635,8 +635,6 @@ class SwissLib{
       return this.swi_coortrf2(xpo, 0, oOffs, 0, xpn, nOffs);
     }
 
-    
-
     var x=[0,0,0];
     x[0] = xpo[0+oOffs];
     x[1] = xpo[1+oOffs] * coseps + xpo[2+oOffs] * sineps;
@@ -790,6 +788,20 @@ class SwissLib{
     return;
   }
 
+  swi_dot_prod_unit(x, y) {
+    var dop = x[0]*y[0]+x[1]*y[1]+x[2]*y[2];
+    var e1 = Math.sqrt(x[0]*x[0]+x[1]*x[1]+x[2]*x[2]);
+    var e2 = Math.sqrt(y[0]*y[0]+y[1]*y[1]+y[2]*y[2]);
+    dop /= e1;
+    dop /= e2;
+    if (dop > 1) {
+      dop = 1;
+    }
+    if (dop < -1) {
+      dop = -1;
+    }
+    return dop;
+  }
 
   swi_ldp_peps(tjd, dpre, deps) {
     

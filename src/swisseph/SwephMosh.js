@@ -194,8 +194,6 @@ class SwephMosh{
 
 
   swi_moshplan2 (J, iplm, pobj) {
-    
-
     var i, j, k, m, k1, ip, np, nt;
     var p;
     var pOff=0;
@@ -324,7 +322,6 @@ class SwephMosh{
   }
 
   swi_moshplan(tjd, ipli, do_save, xpret, xeret) {
-    
     var i;
     var do_earth = false;
     var dx=[0,0,0];
@@ -552,7 +549,7 @@ class SwephMosh{
 
   swi_osc_el_plan(tjd, xp, ipl, ipli, xearth, xsun) {
     var pqr = new Array(9);
-    var x = new Array(9);
+    var x = new Array(6);
     var eps, K, fac, rho, cose, sine;
     var alpha, beta, zeta, sigma, M2, Msgn, M_180_or_0;
     var tjd0=new DblObj();

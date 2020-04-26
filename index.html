@@ -72,6 +72,21 @@
         </td>
       </tr>
       <tr>
+        <td>Sidereal Type</td>
+        <td>
+          <input type="radio" value="" class="sidereal_type" name="sidereal_type" id="sidereal_type_" checked=""><span class="sidereal_type">Fagan/Bradley</span>
+          <input type="radio" value="1" class="sidereal_type" name="sidereal_type" id="sidereal_type_1" ><span class="sidereal_type">Lahiri</span>
+          <input type="radio" value="2" class="sidereal_type" name="sidereal_type" id="sidereal_type_2"><span class="sidereal_type">De Luce</span>
+          <input type="radio" value="3" class="sidereal_type" name="sidereal_type" id="sidereal_type_3"><span class="sidereal_type">Raman</span>
+          <input type="radio" value="4" class="sidereal_type" name="sidereal_type" id="sidereal_type_4"><span class="sidereal_type">Ushashashi</span>
+          <input type="radio" value="5" class="sidereal_type" name="sidereal_type" id="sidereal_type_5"><span class="sidereal_type">Krishnamurti</span>
+          <input type="radio" value="6" class="sidereal_type" name="sidereal_type" id="sidereal_type_6"><span class="sidereal_type">Djwhal Khool</span>
+          <input type="radio" value="7" class="sidereal_type" name="sidereal_type" id="sidereal_type_7"><span class="sidereal_type">Yukteshwar</span>
+          <input type="radio" value="8" class="sidereal_type" name="sidereal_type" id="sidereal_type_8"><span class="sidereal_type">JN Bhasin</span>
+          <input type="radio" value="14" class="sidereal_type" name="sidereal_type" id="sidereal_type_9"><span class="sidereal_type">Aldebaran at 15 Taurus</span>
+        </td>
+      </tr>
+      <tr>
         <td>House System</td>
         <td>
           <input type="radio" value="" class="house_system" name="house_system" id="house_system_" checked=""><span class="house_system">Placidus</span>
@@ -104,6 +119,9 @@
       <tbody id="planet_result"></tbody>
     </table>
 
+    <h2>Ayanamsha</h2>
+    <p id="ayanamsha"></p>
+
     <h2>House Result</h2>
     <table>
       <tr>
@@ -113,102 +131,6 @@
       <tbody id="house_result"></tbody>
     </table>
 
-    <script>
-      var signs = [
-          "Aries",
-          "Tauros",
-          "Gemini",
-          "Cancer",
-          "Leo",
-          "Virgo",
-          "Libra",
-          "Scopio",
-          "Sagiterius",
-          "Capricorn",
-          "Aquarius",
-          "Pisces",
-        ];
-
-      calc();
-
-      function calc(){
-        var start_ms = new Date().getTime();
-
-        document.getElementById("planet_result").innerHTML = "";
-        document.getElementById("house_result").innerHTML = "";
-
-        var year = document.getElementById("year").value;
-        var month = document.getElementById("month").value;
-        var day = document.getElementById("day").value;
-        var hour = document.getElementById("hour").value;
-        var minute = document.getElementById("minute").value;
-        var timezone = document.getElementById("timezone").value;
-        var latitude = document.getElementById("latitude").value;
-        var longitude = document.getElementById("longitude").value;
-        var house = document.querySelector(".house_system:checked").value;
-
-        if(document.getElementById("siderial").checked){
-          $pl.setSiderial();
-        }
-        else{
-          $pl.unsetSiderial();
-        }
-
-        if(document.getElementById("heliocentric").checked){
-          $pl.setHeliocentric();
-        }
-        else{
-          $pl.unsetHeliocentric();
-        }
-
-        $pl.setDate(year, month, day, hour, minute, 0, timezone);
-        var planets = $pl.getPlanets();
-
-        $pl.setGeoPosition(latitude, longitude);
-        var houses = $pl.getHouses(house);
-
-        for(var planet in $pl.planetNames){
-          var text = "";
-
-          text += '<tr>';
-          text += '<td>' + planet + '</td>';
-          text += '<td>'+getDigit60($pl.planets[planet].longitude);
-          text += ' ('+($pl.planets[planet].longitude).toFixed(6)+')</td>';
-          text += '<td>'+getDigit60($pl.planets[planet].longitudeSpeed);
-          text += ' ('+($pl.planets[planet].longitudeSpeed).toFixed(6)+')</td>';
-          text += '<td>'+getDigit60($pl.planets[planet].latitude);
-          text += ' ('+($pl.planets[planet].latitude).toFixed(6)+')</td>';
-          text += '<td>'+getDigit60($pl.planets[planet].latitudeSpeed);
-          text += ' ('+($pl.planets[planet].latitudeSpeed).toFixed(6)+')</td>';
-          text += '<td>'+($pl.planets[planet].distance).toFixed(6)+'</td>';
-          text += '<td>'+($pl.planets[planet].distanceSpeed).toFixed(6)+'</td>';
-          text += "</tr>";
-
-          document.getElementById("planet_result").innerHTML += text;
-        } 
-
-
-        for(var i=1; i<=12; i++){
-          var text = "";
-
-          text += '<tr>';
-          text += '<td>House ' + i + '</td>';
-          text += '<td>'+getDigit60(houses[i]);
-          text += ' ('+houses[i].toFixed(6)+')</td>';
-          text += "</tr>";
-
-          document.getElementById("house_result").innerHTML += text;
-        }
-
-        var elapsed_ms = new Date().getTime() - start_ms;
-        console.log('seconds：' + elapsed_ms);
-      }
-
-      function getDigit60(degree){
-        var minus = degree < 0 ? "-" : "";
-        degree = Math.abs(degree);
-        return minus + parseInt(degree) + "° " + parseInt(degree % 1 * 60) + "' " + (degree * 60 % 1 * 60 ).toFixed(4);
-      }
-    </script>
+    <script type="text/javascript" src="index.js"></script> 
   </body>
 </html>
