@@ -117,7 +117,7 @@ $pl.getUtcDate = function(){
 
   var res = {
     year: dt.getFullYear(),
-    month: dt.getMonth(),
+    month: dt.getMonth() + 1,
     day: dt.getDate(),
     hour: dt.getHours(),
     minute: dt.getMinutes(),
