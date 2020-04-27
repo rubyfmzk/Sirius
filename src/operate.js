@@ -107,7 +107,7 @@ $pl.setJsUtcDate = function(date){
 $pl.getUtcDate = function(){
   var dt = new Date(
     $pl.sd.year,
-    $pl.sd.month,
+    $pl.sd.month - 1,
     $pl.sd.day,
     parseInt($pl.sd.hour),
     parseInt($pl.sd.hour % 1 * 60),
