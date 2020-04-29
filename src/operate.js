@@ -1,5 +1,5 @@
 /*
-  Pluto.js version 0.2
+  Pluto.js version 0.3
 
   Pluto.js is ephemeris calculator for Sun, Moon and Planets.
   This file is made from the Swiss Ephemeris Free Edition,
@@ -30,7 +30,6 @@ $pl.timezone = (function(){
 $pl.planets = {};
 $pl.houses = {};
 $pl.iflag = Swe.SEFLG_MOSEPH|Swe.SEFLG_SPEED;
-$pl.julian_utc = 0;
 $pl.longitude = 0;
 $pl.latitude = 0;
 $pl.house = "";
@@ -64,7 +63,7 @@ $pl.setCurrentDate = function(){
   $pl.setJsUtcDate(date);
 }
 
-$pl.setDate = function(year, month, day, hours, minutes, seconds, timezone){
+$pl.setDate = function(year, month, day, hour, minute, second, timezone){
   if($pl._func.isNull(timezone)) timezone = $pl.timezone;
 
   if($pl.sd){
@@ -72,7 +71,7 @@ $pl.setDate = function(year, month, day, hours, minutes, seconds, timezone){
       parseInt(year),
       parseInt(month),
       parseInt(day),
-      parseInt(hours) + parseInt(minutes) / 60 + parseFloat(seconds) / 3600 - parseFloat(timezone)
+      parseInt(hour) + parseInt(minute) / 60 + parseFloat(second) / 3600 - parseFloat(timezone)
     );
   }
   else{
@@ -80,28 +79,32 @@ $pl.setDate = function(year, month, day, hours, minutes, seconds, timezone){
       parseInt(year),
       parseInt(month),
       parseInt(day),
-      parseInt(hours) + parseInt(minutes) / 60 + parseFloat(seconds) / 3600 - parseFloat(timezone)
+      parseInt(hour) + parseInt(minute) / 60 + parseFloat(second) / 3600 - parseFloat(timezone)
     );
   }
-
-  $pl.julian_utc = $pl.sd.getJulDay();
 }
 
 $pl.setDateArray = function(array){
-  var seconds = array.seconds ? array.seconds : 0;
+  var second = array.seconds ? array.seconds : 0;
   var timezone = array.timezone ? array.timezone : 0;
 
-  $pl.setDate(array.year, array.month, array.day, array.hours, array.minutes, seconds, timezone);
+  $pl.setDate(array.year, array.month, array.day, array.hour, array.minute, second, timezone);
 }
 
 $pl.getJulDay = function(){
-  return $pl.julian_utc;
+  return $pl.sd.jd;
 }
 
 $pl.setJulDay = function(newJD){
   $pl.sd = $pl.sd ? $pl.sd : new SweDate();
 
   $pl.sd.setJulDay(newJD);
+}
+
+$pl.addJulDay = function(addDay){
+  var julDay = $pl.getJulDay();
+
+  $pl.setJulDay(julDay + addDay);
 }
 
 $pl.setJsUtcDate = function(date){
@@ -165,7 +168,7 @@ $pl.getHouses = function(house){
 
   var cusp = Array(13);
   var ascmc = Array(10);
-  $pl.swe.swe_houses($pl.julian_utc,$pl.iflag, $pl.latitude, $pl.longitude, $pl.house, cusp, ascmc, 0);
+  $pl.swe.swe_houses($pl.getJulDay(),$pl.iflag, $pl.latitude, $pl.longitude, $pl.house, cusp, ascmc, 0);
   $pl.houses = cusp;
 
   return $pl.houses;
@@ -183,7 +186,7 @@ $pl.unsetSiderial = function(){
 }
 
 $pl.getAyanamsha = function(){
-  return $pl.swe.swe_get_ayanamsa($pl.julian_utc);
+  return $pl.swe.swe_get_ayanamsa($pl.getJulDay());
 }
 
 $pl.setHeliocentric = function(){
@@ -210,7 +213,7 @@ $pl._func = {
     var ret = {};
     var ret_matrix = new Array(6);
 
-    $pl.swe.calc($pl.julian_utc, $pl.planetNames[planet], $pl.iflag, ret_matrix);
+    $pl.swe.calc($pl.getJulDay(), $pl.planetNames[planet], $pl.iflag, ret_matrix);
     var longitude = ret_matrix[0];
     var latitude = ret_matrix[1];
     var distance = ret_matrix[2];
