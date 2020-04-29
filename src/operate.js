@@ -67,14 +67,31 @@ $pl.setCurrentDate = function(){
 $pl.setDate = function(year, month, day, hours, minutes, seconds, timezone){
   if($pl._func.isNull(timezone)) timezone = $pl.timezone;
 
-  $pl.sd = new SweDate(
-    parseInt(year),
-    parseInt(month),
-    parseInt(day),
-    parseInt(hours) + parseInt(minutes) / 60 + parseFloat(seconds) / 3600 - parseFloat(timezone)
-  );
+  if($pl.sd){
+    $pl.sd.setDate(
+      parseInt(year),
+      parseInt(month),
+      parseInt(day),
+      parseInt(hours) + parseInt(minutes) / 60 + parseFloat(seconds) / 3600 - parseFloat(timezone)
+    );
+  }
+  else{
+    $pl.sd = new SweDate(
+      parseInt(year),
+      parseInt(month),
+      parseInt(day),
+      parseInt(hours) + parseInt(minutes) / 60 + parseFloat(seconds) / 3600 - parseFloat(timezone)
+    );
+  }
 
   $pl.julian_utc = $pl.sd.getJulDay();
+}
+
+$pl.setDateArray = function(array){
+  var seconds = array.seconds ? array.seconds : 0;
+  var timezone = array.timezone ? array.timezone : 0;
+
+  $pl.setDate(array.year, array.month, array.day, array.hours, array.minutes, seconds, timezone);
 }
 
 $pl.getJulDay = function(){
@@ -82,14 +99,9 @@ $pl.getJulDay = function(){
 }
 
 $pl.setJulDay = function(newJD){
-  $pl.julian_utc = newJD;
-  $pl.sd.jd = newJD;
-  $pl.sd.deltatIsValid = false;
-  var dt = $pl.sd.swe_revjul(newJD, $pl.sd.calType);
-  $pl.sd.year = dt.year;
-  $pl.sd.month = dt.month;
-  $pl.sd.day = dt.day;
-  $pl.sd.hour = dt.hour;
+  $pl.sd = $pl.sd ? $pl.sd : new SweDate();
+
+  $pl.sd.setJulDay(newJD);
 }
 
 $pl.setJsUtcDate = function(date){
