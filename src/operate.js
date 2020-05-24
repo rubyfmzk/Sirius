@@ -49,7 +49,8 @@ $pl.planetNames = {
   Earth: Swe.SE_EARTH,
   TrueNode: Swe.SE_TRUE_NODE,
   MeanNode: Swe.SE_MEAN_NODE,
-  Lilith: Swe.SE_MEAN_APOG,
+  TrueLilith: Swe.SE_OSCU_APOG,
+  MeanLilith: Swe.SE_MEAN_APOG,
   //Chiron: Swe.SE_CHIRON, 
   //Juno: Swe.SE_JUNO,
 };
@@ -65,6 +66,11 @@ $pl.setCurrentDate = function(){
 
 $pl.setDate = function(year, month, day, hour, minute, second, timezone){
   if($pl._func.isNull(timezone)) timezone = $pl.timezone;
+  if($pl._func.isNull(month)) month = 1;
+  if($pl._func.isNull(day)) day = 1;
+  if($pl._func.isNull(hour)) hour = 0;
+  if($pl._func.isNull(minute)) minute = 0;
+  if($pl._func.isNull(second)) second = 0;
 
   if($pl.sd){
     $pl.sd.setDate(
@@ -126,6 +132,28 @@ $pl.getUtcDate = function(){
     $pl.sd.day,
     parseInt($pl.sd.hour),
     parseInt($pl.sd.hour % 1 * 60),
+    $pl.sd.hour * 60 % 1 * 60,
+    $pl.sd.hour * 60 % 1 * 60 % 1 * 1000,
+  );
+
+  var res = {
+    year: dt.getFullYear(),
+    month: dt.getMonth() + 1,
+    day: dt.getDate(),
+    hour: dt.getHours(),
+    minute: dt.getMinutes(),
+    second: Math.round(dt.getSeconds() + dt.getMilliseconds() / 1000),
+  }
+  return res;
+}
+
+$pl.getLocalDate = function(timezone){
+  var dt = new Date(
+    $pl.sd.year,
+    $pl.sd.month - 1,
+    $pl.sd.day,
+    parseInt($pl.sd.hour) + parseInt(timezone),
+    parseInt($pl.sd.hour % 1 * 60) + parseInt(timezone * 60 % 60),
     $pl.sd.hour * 60 % 1 * 60,
     $pl.sd.hour * 60 % 1 * 60 % 1 * 1000,
   );

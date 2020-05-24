@@ -1,5 +1,5 @@
 /*
-  Pluto.js version 0.2
+  Pluto.js version 0.3
 
   Pluto.js is ephemeris calculator for Sun, Moon and Planets.
   This file is made from the Swiss Ephemeris Free Edition,
@@ -945,6 +945,103 @@ class SwissEph{
         return this.swecalc_error(x);
       }
 
+    /***********************************************
+     * osculating lunar node ('true node')         *
+     ***********************************************/
+    } else if (ipl == Swe.SE_TRUE_NODE) {
+      if (((iflag & Swe.SEFLG_HELCTR)!=0) ||
+          ((iflag & Swe.SEFLG_BARYCTR)!=0)) {
+        /* heliocentric/barycentric lunar node not allowed */
+        for (i = 0; i < 24; i++) {
+    x[i] = 0;
+        }
+        return iflag;
+      }
+      ndp = this.swed.nddat[Swe.SwephData.SEI_TRUE_NODE];
+      xp = ndp.xreturn;
+      retc = this.lunar_osc_elem(tjd, Swe.SwephData.SEI_TRUE_NODE, iflag);
+      iflag = ndp.xflgs;
+      /* to avoid infinitesimal deviations from latitude = 0
+       * that result from conversions */
+      if ((iflag & Swe.SEFLG_SIDEREAL)==0 &&
+          (iflag & Swe.SEFLG_J2000)==0) {
+        ndp.xreturn[1] = 0.0; /* ecl. latitude       */
+        ndp.xreturn[4] = 0.0; /*               speed */
+        ndp.xreturn[8] = 0.0; /* z coordinate        */
+        ndp.xreturn[11] = 0.0;  /*               speed */
+      }
+      if (retc == Swe.ERR) {
+        return this.swecalc_error(x);
+      }
+    /***********************************************
+     * osculating lunar apogee                     *
+     ***********************************************/
+    } else if (ipl == Swe.SE_OSCU_APOG) {
+      if (((iflag & Swe.SEFLG_HELCTR)!=0) ||
+          ((iflag & Swe.SEFLG_BARYCTR)!=0)) {
+        /* heliocentric/barycentric lunar apogee not allowed */
+        for (i = 0; i < 24; i++) {
+          x[i] = 0;
+        }
+
+        return iflag;
+      }
+      ndp = this.swed.nddat[Swe.SwephData.SEI_OSCU_APOG];
+      xp = ndp.xreturn;
+      retc = this.lunar_osc_elem(tjd, Swe.SwephData.SEI_OSCU_APOG, iflag);
+      iflag = ndp.xflgs;
+      if (retc == Swe.ERR) {
+
+        return this.swecalc_error(x);
+      }
+    /***********************************************
+     * interpolated lunar apogee                   *    
+     ***********************************************/
+    } else if (ipl == Swe.SE_INTP_APOG) {
+      if ((iflag & Swe.SEFLG_HELCTR)!=0 ||
+          (iflag & Swe.SEFLG_BARYCTR)!=0) {
+        /* heliocentric/barycentric lunar apogee not allowed */
+        for (i = 0; i < 24; i++) {
+          x[i] = 0;
+        }
+
+        return iflag;
+      }
+      if (tjd < Swe.SwephData.MOSHLUEPH_START || tjd > Swe.SwephData.MOSHLUEPH_END) {
+        for (i = 0; i < 24; i++)
+    x[i] = 0;
+        return Swe.ERR;
+      }
+      ndp = this.swed.nddat[Swe.SwephData.SEI_INTP_APOG];
+      xp = ndp.xreturn;
+      retc = intp_apsides(tjd, Swe.SwephData.SEI_INTP_APOG, iflag); 
+      iflag = ndp.xflgs;
+      if (retc == Swe.ERR)
+        return this.swecalc_error(x);
+    /*********************************************** 
+     * interpolated lunar perigee                  *    
+     ***********************************************/
+    } else if (ipl == Swe.SE_INTP_PERG) {
+      if ((iflag & Swe.SEFLG_HELCTR)!=0 ||
+          (iflag & Swe.SEFLG_BARYCTR)!=0) {
+        /* heliocentric/barycentric lunar apogee not allowed */
+        for (i = 0; i < 24; i++) {
+          x[i] = 0;
+        }
+        return iflag;
+      }
+      if (tjd < Swe.SwephData.MOSHLUEPH_START || tjd > Swe.SwephData.MOSHLUEPH_END) {
+        for (i = 0; i < 24; i++)
+    x[i] = 0;
+        return Swe.ERR;
+      }
+      ndp = this.swed.nddat[Swe.SwephData.SEI_INTP_PERG];
+      xp = ndp.xreturn;
+      retc = intp_apsides(tjd, Swe.SwephData.SEI_INTP_PERG, iflag); 
+      iflag = ndp.xflgs;
+      if (retc == Swe.ERR)
+        return swecalc_error(x);
+
     /*********************************************** 
      * minor planets                               *
      ***********************************************/
@@ -1011,7 +1108,7 @@ class SwissEph{
 
           if (epheflag != Swe.SEFLG_MOSEPH) {
             iflag = (iflag & ~Swe.SEFLG_EPHMASK) | Swe.SEFLG_MOSEPH;
-            epheflag = SweConst.SEFLG_MOSEPH;
+            epheflag = Swe.SEFLG_MOSEPH;
 //          goto do_asteroid;
             continue;
           } else
@@ -1063,14 +1160,14 @@ class SwissEph{
     /* sweplan() provides barycentric sun as a by-product in save area;
      * it is saved in swed.pldat[SEI_SUNBARY].x */
     retc = sweplan(tjd, SwephData.SEI_EARTH, SwephData.SEI_FILE_PLANET, iflag,
-                   SwephData.DO_SAVE, null, null, null, null, serr);
+                   SwephData.DO_SAVE, null, null, null, null);
 
-    if (retc == SweConst.ERR || retc == SwephData.NOT_AVAILABLE) {
-      return SweConst.ERR;
+    if (retc == Swe.ERR || retc == SwephData.NOT_AVAILABLE) {
+      return Swe.ERR;
     }
     psdp.teval = tjd;
     /* pedp.teval = tjd; */
-    return SweConst.OK;
+    return Swe.OK;
   }
 
   sweph_moon(tjd, ipli, iflag) {
