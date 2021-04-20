@@ -14,7 +14,7 @@
 
   Copyright 2020- Ruby Fumizuki
   https://rubyfmzk.com
-  https://github.com/rubyfmzk/Y2J
+  https://github.com/rubyfmzk/Pluto
   rubyfmzk@gmail.com
 */
 /*

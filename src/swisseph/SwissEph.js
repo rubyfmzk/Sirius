@@ -14,7 +14,7 @@
 
   Copyright 2020- Ruby Fumizuki
   https://rubyfmzk.com
-  https://github.com/rubyfmzk/Y2J
+  https://github.com/rubyfmzk/Pluto
   rubyfmzk@gmail.com
 */
 /*
@@ -100,10 +100,11 @@ class SwissEph{
     
     this.swed = Swe.SwissData;
     this.sl = new SwissLib(this.swed);
-    this.sc = null;
     this.sm = new Swemmoon(this.swed, this.sl);
     this.smosh = new SwephMosh(this.sl, this, this.swed);
     this.sh = new SweHouse(this.sl, this, this.swed);
+    this.sc = new Swecl(this, this.sl, this.sm, this.swed);
+    this.sd = new SweDate();
     //this.ext = new Extensions;
     this.lastLat = 0.0;
     this.lastLong = 0.0;
@@ -222,8 +223,8 @@ class SwissEph{
   swe_calc_ut(tjd_ut, ipl, iflag, xx) {
     var deltat;
     var retval = Swe.OK;
-    SweDate.swi_set_tid_acc(tjd_ut, iflag, 0);  
-    deltat = SweDate.getDeltaT(tjd_ut);
+    this.sd.swi_set_tid_acc(tjd_ut, iflag, 0);  
+    deltat = this.sd.getDeltaT(tjd_ut);
     retval = swe_calc(tjd_ut + deltat, ipl, iflag, xx);
     return retval;
   }
@@ -360,8 +361,7 @@ class SwissEph{
       this.swed.astro_models[a] = 0;
     }
     this.swed.jpldenum = 0;
-    var sd = new SweDate;
-    sd.swe_set_tid_acc(Swe.SE_TIDAL_AUTOMATIC);
+    this.sd.swe_set_tid_acc(Swe.SE_TIDAL_AUTOMATIC);
     this.swed.geopos_is_set = false;
     this.swed.ayana_is_set = false;
     this.swed.is_old_starfile = false;
@@ -457,7 +457,7 @@ class SwissEph{
   }
 
   swe_get_ayanamsa_ut(tjd_ut) {
-    return swe_get_ayanamsa(tjd_ut + SweDate.getDeltaT(tjd_ut));
+    return swe_get_ayanamsa(tjd_ut + this.sd.getDeltaT(tjd_ut));
   }
 
   swe_get_ayanamsa_name(isidmode) {
@@ -681,8 +681,8 @@ class SwissEph{
 
     if (ext==null) { ext=new Extensions(this); }
     var calcUT = (tc instanceof TCHouses);
-    return ext.getTransit(tc, jdET - (calcUT ? SweDate.getDeltaT(jdET) : 0), backwards, jdLimit) +
-            (calcUT ? SweDate.getDeltaT(jdET) : 0);
+    return ext.getTransit(tc, jdET - (calcUT ? this.sd.getDeltaT(jdET) : 0), backwards, jdLimit) +
+            (calcUT ? this.sd.getDeltaT(jdET) : 0);
   }
 
   getTransitUT(tc, jdUT, backwards, jdLimit){
@@ -691,19 +691,19 @@ class SwissEph{
       var calcUT = (tc instanceof TCHouses);
       var jdET = ext.getTransit(
                             tc,
-                            jdUT + (calcUT ? 0 : SweDate.getDeltaT(jdUT)),
+                            jdUT + (calcUT ? 0 : this.sd.getDeltaT(jdUT)),
                             backwards,
                             (backwards?-Double.MAX_VALUE:Double.MAX_VALUE));
-      return jdET - (calcUT ? 0 : SweDate.getDeltaT(jdET));
+      return jdET - (calcUT ? 0 : this.sd.getDeltaT(jdET));
     }
 
     if (ext==null) { ext=new Extensions(this); }
     var jdET = ext.getTransit(
                           tc,
-                          jdUT + SweDate.getDeltaT(jdUT),
+                          jdUT + this.sd.getDeltaT(jdUT),
                           backwards,
-                          jdLimit + SweDate.getDeltaT(jdLimit));
-    return jdET - SweDate.getDeltaT(jdET);
+                          jdLimit + this.sd.getDeltaT(jdLimit));
+    return jdET - this.sd.getDeltaT(jdET);
   }
 
   swe_calc_error(xx) {
@@ -3279,7 +3279,7 @@ class SwissEph{
       console.error("geographic position has not been set");
       return Swe.ERR;
     }
-    delt = SweDate.getDeltaT(tjd);
+    delt = this.sd.getDeltaT(tjd);
     tjd_ut = tjd - delt;
     if (this.swed.oec.teps == tjd && this.swed.nut.tnut == tjd) {
       eps = this.swed.oec.eps;

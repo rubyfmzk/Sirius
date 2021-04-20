@@ -1,5 +1,6 @@
 /*
-  Pluto.js version 0.2]},
+  Pluto.js version 0.5
+
   Pluto.js is ephemeris calculator for Sun, Moon and Planets.
   This file is made from the Swiss Ephemeris Free Edition,
   Version 2.00.00 of Astrodienst AG, Switzerland
@@ -9,10 +10,11 @@
   you should ONLY contact me and not Astrodienst,
   as the Astrodienst AG is not involved in this port in any way.
 
-  Licensed under GNU General Public License v2.0]},
+  Licensed under GNU General Public License v2.0
+
   Copyright 2020- Ruby Fumizuki
   https://rubyfmzk.com
-  https://github.com/rubyfmzk/Y2J
+  https://github.com/rubyfmzk/Pluto
   rubyfmzk@gmail.com
 */
 Swe.FIXSTARS = {

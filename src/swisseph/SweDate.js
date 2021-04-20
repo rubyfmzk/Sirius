@@ -14,7 +14,7 @@
 
   Copyright 2020- Ruby Fumizuki
   https://rubyfmzk.com
-  https://github.com/rubyfmzk/Y2J
+  https://github.com/rubyfmzk/Pluto
   rubyfmzk@gmail.com
 */
 /*
@@ -103,7 +103,7 @@
 */
 class SweDate{
   constructor(year, month, day, hour, calType){
-    this.sw =  Swe.SwissData;
+    this.swed = Swe.SwissData;
     this.SUNDAY = 0;
     this.MONDAY = 1,
     this.TUESDAY = 2;
@@ -677,7 +677,7 @@ class SweDate{
     var ans = 0;
     var B, Y, Ygreg, dd;
     var iy;
-    var deltat_model = this.sw.astro_models[Swe.SE_MODEL_DELTAT];
+    var deltat_model = this.swed.astro_models[Swe.SE_MODEL_DELTAT];
     if (deltat_model == 0) deltat_model = Swe.SEMOD_DELTAT_DEFAULT;
     /* read additional values from swedelta.txt */
     /*AS_BOOL use_espenak_meeus = DELTAT_ESPENAK_MEEUS_2006;*/
@@ -1032,7 +1032,7 @@ class SweDate{
 
     if (tjd_ut1 < J1972) {
       dret[1] = this.swe_julday(iyear, imonth, iday, dhour, gregflag);
-      dret[0] = dret[1] + getDeltaT(dret[1]);
+      dret[0] = dret[1] + this.getDeltaT(dret[1]);
       return dret;
     }
 
