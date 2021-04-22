@@ -276,7 +276,8 @@ class SwissEph{
     }
     if (ipl < Swe.SE_NPLANETS && ipl >= Swe.SE_SUN) {
       sd = this.swed.savedat[ipl];
-    } else {
+    }
+    else {
       sd = this.swed.savedat[Swe.SE_NPLANETS];
     }
     iflgcoor = Swe.SEFLG_EQUATORIAL | Swe.SEFLG_XYZ | Swe.SEFLG_RADIANS;
@@ -292,7 +293,8 @@ class SwissEph{
           }
         }
       }
-    } catch (e) {
+    }
+    catch (e) {
       console.error(e);
     }
 
@@ -300,7 +302,8 @@ class SwissEph{
     xs=sd.xsaves;
     if (ipl == Swe.SE_ECL_NUT) {
       i = 4;
-    } else {
+    }
+    else {
       i = 3;
     }
     for (j = 0; j < i; j++){
@@ -321,7 +324,7 @@ class SwissEph{
       iflag = iflag & ~Swe.SEFLG_DEFAULTEPH;
     }
 
-        return iflag;
+    return iflag;
   };
 
   free_planets() {

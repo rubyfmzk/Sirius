@@ -759,6 +759,7 @@ class Swecl{
     let iflag, iflag2;
     let no_eclipse = false;
     let oe = this.swed.oec;
+
     for (i = 0; i < 10; i++){
       dcore[i] = 0;
     }
@@ -774,24 +775,29 @@ class Swecl{
       return retc;
     }
     /* moon in polar coordinates */
-    if ((retc = this.sw.swe_calc(tjd, Swe.SE_MOON, iflag2, lm)) == Swe.ERR)
+    if ((retc = this.sw.swe_calc(tjd, Swe.SE_MOON, iflag2, lm)) == Swe.ERR){
       return retc;
+    }
     /* sun in cartesian coordinates */
-    if ((retc = this.calc_planet_star(tjd, ipl, starname, iflag, rs)) == Swe.ERR)
+    if ((retc = this.calc_planet_star(tjd, ipl, starname, iflag, rs)) == Swe.ERR){
       return retc;
+    }
     /* sun in polar coordinates */
-    if ((retc = this.calc_planet_star(tjd, ipl, starname, iflag2, ls)) == Swe.ERR)
+    if ((retc = this.calc_planet_star(tjd, ipl, starname, iflag2, ls)) == Swe.ERR){
       return retc;
+    }
     /* save sun position */
-    for (i = 0; i <= 2; i++)
+    for (i = 0; i <= 2; i++){
       rst[i] = rs[i];
+    }
     /* save moon position */
-    for (i = 0; i <= 2; i++)
+    for (i = 0; i <= 2; i++){
       rmt[i] = rm[i];
+    }
     if ((iflag & Swe.SEFLG_NONUT)!=0) {
-      sidt = this.sl.swe_sidtime0(tjd_ut, oe.eps * this.swed.RADTODEG, 0) * 15 *
-                                                            this.swed.DEGTORAD;
-    } else {
+      sidt = this.sl.swe_sidtime0(tjd_ut, oe.eps * this.swed.RADTODEG, 0) * 15 * this.swed.DEGTORAD;
+    }
+    else {
       sidt = this.sl.swe_sidtime(tjd_ut) * 15 * this.swed.DEGTORAD;
     }
     /*
@@ -804,7 +810,7 @@ class Swecl{
       drad = Swe.SwephData.pla_diam[ipl] / 2 / Swe.AUNIT;
     }
     else if (ipl > Swe.SE_AST_OFFSET){
-      drad = swed.ast_diam / 2 * 1000 / Swe.AUNIT; /* km -> m -> AU */
+      drad = this.swed.ast_diam / 2 * 1000 / Swe.AUNIT; /* km -> m -> AU */
     }
     else{
       drad = 0;
@@ -828,8 +834,9 @@ class Swecl{
       /* distance of moon from geocenter */
       dm = Math.sqrt(this.sl.square_sum(rm));
       /* Account for oblateness of earth */
-      for (i = 0; i <= 2; i++)
+      for (i = 0; i <= 2; i++){
         lx[i] = ls[i];
+      }
       this.sl.swi_polcart(lx, rs);
       rs[2] /= earthobl;
       /* sun - moon vector */
@@ -851,6 +858,7 @@ class Swecl{
       cosf2 = Math.sqrt(1 - sinf2 * sinf2);
       /* distance of moon from fundamental plane */
       s0 = -this.sw.dot_prod(rm, e);
+console.log('s0',s0);
       /* distance of shadow axis from geocenter */
       r0 = Math.sqrt(dm * dm - s0 * s0);
       /* diameter of core shadow on fundamental plane */
@@ -868,6 +876,7 @@ class Swecl{
       /**************************
        * central (total or annular) phase
        **************************/
+console.log(retc, de, cosf1, r0, de * cosf1, de * cosf1 - r0);
       retc = 0;
       if (de * cosf1 >= r0) {
         retc |= Swe.SE_ECL_CENTRAL;
@@ -879,12 +888,11 @@ class Swecl{
         retc |= (Swe.SE_ECL_PARTIAL | Swe.SE_ECL_NONCENTRAL);
       }
       else {
-        //console.log("no solar eclipse at tjd = "+tjd);
+        console.log("no solar eclipse at tjd = "+tjd);
 
         for (i = 0; i < 10; i++){
           geopos[i] = 0;
         }
-//    *dcore = 0;
         dcore[0] = 0;
         retc = 0;
         d = 0;
@@ -895,7 +903,8 @@ class Swecl{
       d = s0 * s0 + de * de - dm * dm;
       if (d > 0) {
         d = Math.sqrt(d);
-      } else {
+      }
+      else {
         d = 0;
       }
       /* distance of moon from shadow point on earth */
@@ -952,6 +961,7 @@ class Swecl{
       /* diameter of penumbra at place of maximum eclipse */
       dcore[1] = (s / dsmt * ( drad * 2 + dmoon) + dmoon) * cosf2;
       dcore[1] *= Swe.AUNIT / 1000.0;
+console.log(retc, no_eclipse);
       if ((retc & Swe.SE_ECL_PARTIAL)==0 && !no_eclipse) {
         if (dcore[0] > 0) {
           /*printf("annular\n");*/
@@ -1338,7 +1348,7 @@ class Swecl{
     }
     K = parseInt((tjd_start - Swe.SwephData.J2000) / 365.2425 * 12.3685);
     K -= direction;
-//next_try:
+
     while(true) {
       retflag = 0;
       dont_times = false;
@@ -1354,10 +1364,12 @@ class Swecl{
       if (Ff > 180) {
         Ff -= 180;
       }
+
       if (Ff > 21 && Ff < 159) {    /* no eclipse possible */
         K += direction;
-        continue;
+      //  continue;ちょっと試す
       }
+
       /* approximate time of geocentric maximum eclipse
        * formula from Meeus, German, p. 381 */
       tjd = 2451550.09765 + 29.530588853 * K
@@ -1388,9 +1400,7 @@ class Swecl{
         dtstart = 5;
       }
       dtdiv = 4;
-      for (dt = dtstart;
-           dt > 0.0001;
-           dt /= dtdiv) {
+      for (dt = dtstart; dt > 0.0001; dt /= dtdiv) {
         for (i = 0, t = tjd - dt; i <= 2; i++, t += dt) {
           if (this.sw.swe_calc(t, Swe.SE_SUN, iflag, ls) == Swe.ERR) {
             return Swe.ERR;
@@ -1439,6 +1449,7 @@ class Swecl{
         K += direction;
         continue;
       }
+
       /*
        * eclipse type, SE_ECL_TOTAL, _ANNULAR, etc.
        * SE_ECL_ANNULAR_TOTAL will be discovered later
@@ -1446,11 +1457,14 @@ class Swecl{
       if ((retflag = this.eclipse_where(tjd, Swe.SE_SUN, null, ifl, geopos, dcore)) == Swe.ERR) {
         return retflag;
       }
+console.log(3, tjd, Swe.SE_SUN, null, ifl, geopos, dcore);
+
       if (retflag == 0) {   /* can happen with extremely small percentage */
         retflag = Swe.SE_ECL_PARTIAL | Swe.SE_ECL_NONCENTRAL;
         tret[4] = tret[5] = tjd;    /* fix this ???? */
         dont_times = true;
       }
+
       /*
        * check whether or not eclipse type found is wanted
        */
@@ -1487,6 +1501,7 @@ class Swecl{
       if (dont_times) {
         break;
       }
+console.log(2, dc, retflag);
       /*
        * n = 0: times of eclipse begin and end
        * n = 1: times of totality begin and end
@@ -1497,20 +1512,23 @@ class Swecl{
       } else if ((retflag & Swe.SE_ECL_NONCENTRAL)!=0) {
         o = 1;
       }
-      else
+      else{
         o = 2;
+      }
       dta = twohr;
       dtb = tenmin / 3.0;
       for (n = 0; n <= o; n++) {
         if (n == 0) {
           /*dc[1] = dcore[3] / 2 + de - dcore[1];*/
           i1 = 2; i2 = 3;
-        } else if (n == 1) {
+        }
+        else if (n == 1) {
           if ((retflag & Swe.SE_ECL_PARTIAL)!=0) {
             continue;
           }
           i1 = 4; i2 = 5;
-        } else if (n == 2) {
+        }
+        else if (n == 2) {
           if ((retflag & Swe.SE_ECL_NONCENTRAL)!=0) {
             continue;
           }
@@ -1522,9 +1540,11 @@ class Swecl{
           }
           if (n == 0) {
             dc[i] = dcore[4] / 2 + de / dcore[5] - dcore[2];
-          } else if (n == 1) {
+          } 
+          else if (n == 1) {
             dc[i] = Math.abs(dcore[3]) / 2 + de / dcore[6] - dcore[2];
-          } else if (n == 2) {
+          }
+          else if (n == 2) {
             dc[i] = de / dcore[6] - dcore[2];
           }
         }
@@ -1553,6 +1573,7 @@ class Swecl{
       /*
        * annular-total eclipses
        */
+console.log(1, dc, retflag);
       if ((retflag & Swe.SE_ECL_TOTAL)!=0) {
         if ((retflag2 = this.eclipse_where(tret[0], Swe.SE_SUN, null, ifl, geopos, dcore)) == Swe.ERR) {
           return retflag2;
@@ -1570,11 +1591,13 @@ class Swecl{
          * to times before and after, when the core shadow becomes
          * zero and totality changes into annularity or vice versa.
          */
+console.log(dc, retflag);
         if (dc[0] * dc[1] < 0 || dc[0] * dc[2] < 0) {
           retflag |= Swe.SE_ECL_ANNULAR_TOTAL;
           retflag &= ~Swe.SE_ECL_TOTAL;
         }
       }
+
       /* if eclipse is given but not wanted: */
       if ((ifltype & Swe.SE_ECL_TOTAL)==0 &&
           (retflag & Swe.SE_ECL_TOTAL)!=0) {
@@ -1609,16 +1632,15 @@ class Swecl{
       }
       if (dc[0] * dc[1] >= 0) {     /* no transit */
         tret[1] = 0;
-      } else {
+      }
+      else {
         tjd = tjds;
         dt = 0.1;
         dt1.val = (tret[3] - tret[2]) / 2.0;
         if (dt1.val < dt) {
           dt = dt1.val / 2.0;
         }
-        for (j = 0;
-            dt > 0.01;
-            j++, dt /= 3) {
+        for (j = 0; dt > 0.01; j++, dt /= 3) {
           for (i = 0, t = tjd; i <= 1; i++, t -= dt) {
             tt = t + this.sd.getDeltaT(t);
             if (this.sw.swe_calc(tt, Swe.SE_SUN, iflag, ls) == Swe.ERR) {
@@ -1784,18 +1806,22 @@ class Swecl{
         console.error("occultation never occurs: star " + starname + " has ecl. lat. " + ls[1]);
         return Swe.ERR;
       }
-      if (this.sw.swe_calc(t, Swe.SE_MOON, ifl, lm) == Swe.ERR)
+      if (this.sw.swe_calc(t, Swe.SE_MOON, ifl, lm) == Swe.ERR){
         return Swe.ERR;
+      }
       dl = this.sl.swe_degnorm(ls[0] - lm[0]);
-      if (direction < 0)
+      if (direction < 0){
         dl -= 360;
+      }
       /* get rough conjunction in ecliptic longitude */
       while (Math.abs(dl) > 0.1) {
         t += dl / 13;
-        if (this.calc_planet_star(t, ipl, starname, ifl, ls) == Swe.ERR)
-    return Swe.ERR;
-        if (this.sw.swe_calc(t, Swe.SE_MOON, ifl, lm) == Swe.ERR)
+        if (this.calc_planet_star(t, ipl, starname, ifl, ls) == Swe.ERR){
           return Swe.ERR;
+        }
+        if (this.sw.swe_calc(t, Swe.SE_MOON, ifl, lm) == Swe.ERR){
+          return Swe.ERR;
+        }
         dl = this.sl.swe_degnorm(ls[0] - lm[0]);
         if (dl > 180) dl -= 360;
       }
@@ -1815,14 +1841,18 @@ class Swecl{
       /*
        * radius of planet disk in AU
        */
-      if (starname != null && starname.length > 0)
+      if (starname != null && starname.length > 0){
         drad = 0;
-      else if (ipl < Swe.SwephData.NDIAM)
+      }
+      else if (ipl < Swe.SwephData.NDIAM){
         drad = Swe.SwephData.pla_diam[ipl] / 2 / Swe.AUNIT;
-      else if (ipl > Swe.SE_AST_OFFSET)
-        drad = swed.ast_diam / 2 * 1000 / Swe.AUNIT; /* km -> m -> AU */
-      else
+      }
+      else if (ipl > Swe.SE_AST_OFFSET){
+        drad = this.swed.ast_diam / 2 * 1000 / Swe.AUNIT; /* km -> m -> AU */
+      }
+      else{
         drad = 0;
+      }
       /*
        * time of maximum eclipse (if eclipse) =
        * minimum geocentric angle between sun and moon edges.
@@ -1990,11 +2020,13 @@ class Swecl{
         if (n == 0) {
           /*dc[1] = dcore[3] / 2 + de - dcore[1];*/
           i1 = 2; i2 = 3;
-        } else if (n == 1) {
+        }
+        else if (n == 1) {
           if ((retflag & Swe.SE_ECL_PARTIAL)!=0)
             continue;
           i1 = 4; i2 = 5;
-        } else if (n == 2) {
+        }
+        else if (n == 2) {
           if ((retflag & Swe.SE_ECL_NONCENTRAL)!=0)
             continue;
           i1 = 6; i2 = 7;
@@ -2353,7 +2385,8 @@ class Swecl{
     K = parseInt((tjd_start - Swe.SwephData.J2000) / 365.2425 * 12.3685);
     if (backward!=0) {
       K++;
-    } else {
+    }
+    else {
       K--;
     }
 //next_try:
@@ -2370,7 +2403,8 @@ class Swecl{
       if (Ff > 21 && Ff < 159) {         /* no eclipse possible */
         if (backward!=0) {
           K--;
-        } else {
+        }
+        else {
           K++;
         }
         continue;
@@ -2458,7 +2492,8 @@ class Swecl{
       if (dctr.val > rsplusrm) {
         if (backward!=0) {
           K--;
-        } else {
+        }
+        else {
           K++;
         }
         continue;
@@ -2469,23 +2504,27 @@ class Swecl{
         || (backward==0 && tret[0] <= tjd_start + 0.0001)) {
         if (backward!=0) {
           K--;
-        } else {
+        }
+        else {
           K++;
         }
         continue;
       }
       if (dctr.val < rsminusrm) {
         retflag = Swe.SE_ECL_ANNULAR;
-      } else if (dctr.val < Math.abs(rsminusrm)) {
+      }
+      else if (dctr.val < Math.abs(rsminusrm)) {
         retflag = Swe.SE_ECL_TOTAL;
-      } else if (dctr.val <= rsplusrm) {
+      }
+      else if (dctr.val <= rsplusrm) {
         retflag = Swe.SE_ECL_PARTIAL;
       }
       dctrmin = dctr.val;
       /* contacts 2 and 3 */
       if (dctr.val > Math.abs(rsminusrm)) {/* partial, no 2nd and 3rd contact */
         tret[2] = tret[3] = 0;
-      } else {
+      }
+      else {
         dc[1] = Math.abs(rsminusrm) - dctrmin;
         for (i = 0, t = tjd - twomin; i <= 2; i += 2, t = tjd + twomin) {
           if (this.sw.swe_calc(t, Swe.SE_SUN, iflagcart, xs) == Swe.ERR) {
@@ -2621,12 +2660,12 @@ class Swecl{
         if (attr[6] > 0) {  /* this is save, sun above horizon, using app. alt. */
           retflag |= Swe.SE_ECL_VISIBLE;
           switch(i) {
-          case 0: retflag |= Swe.SE_ECL_MAX_VISIBLE; break;
-          case 1: retflag |= Swe.SE_ECL_1ST_VISIBLE; break;
-          case 2: retflag |= Swe.SE_ECL_2ND_VISIBLE; break;
-          case 3: retflag |= Swe.SE_ECL_3RD_VISIBLE; break;
-          case 4: retflag |= Swe.SE_ECL_4TH_VISIBLE; break;
-          default:  break;
+            case 0: retflag |= Swe.SE_ECL_MAX_VISIBLE; break;
+            case 1: retflag |= Swe.SE_ECL_1ST_VISIBLE; break;
+            case 2: retflag |= Swe.SE_ECL_2ND_VISIBLE; break;
+            case 3: retflag |= Swe.SE_ECL_3RD_VISIBLE; break;
+            case 4: retflag |= Swe.SE_ECL_4TH_VISIBLE; break;
+            default:  break;
           }
         }
       }
@@ -2634,7 +2673,8 @@ class Swecl{
       if ((retflag & Swe.SE_ECL_VISIBLE)==0) {
         if (backward!=0) {
           K--;
-        } else {
+        }
+        else {
           K++;
         }
 //        goto next_try;
@@ -2774,7 +2814,7 @@ class Swecl{
         drad = Swe.SwephData.pla_diam[ipl] / 2 / Swe.AUNIT;
       }
       else if (ipl > Swe.SE_AST_OFFSET){
-        drad = swed.ast_diam / 2 * 1000 / Swe.AUNIT; /* km -> m -> AU */
+        drad = this.swed.ast_diam / 2 * 1000 / Swe.AUNIT; /* km -> m -> AU */
       }
       else{
         drad = 0;
@@ -2782,11 +2822,10 @@ class Swecl{
       /* now find out, if there is an occultation at our geogr. location */
       dtdiv = 3;
       dtstart = dadd2; /* formerly 0.2 */
-      for (dt = dtstart; 
-           dt > 0.00001; 
-           dt /= dtdiv) {
-        if (dt < 0.01) 
+      for (dt = dtstart;  dt > 0.00001;  dt /= dtdiv) {
+        if (dt < 0.01) {
           dtdiv = 2;
+        }
         for (i = 0, t = tjd - dt; i <= 2; i++, t += dt) {
           /* this takes some time, but is necessary to avoid
            * missing an eclipse */
@@ -2805,7 +2844,8 @@ class Swecl{
           if (dt < 0.1 && Math.abs(ls[1] - lm[1]) > 2) {
             if (one_try || stop_after_this) {
               stop_after_this = true;
-            } else {
+            }
+            else {
               /*t = tjd + direction * 2;*/
               t = tjd + direction * 20;
               tjd = t;
@@ -2887,7 +2927,8 @@ class Swecl{
       /* contacts 2 and 3 */
       if (dctr.val > Math.abs(rsminusrm)) { /* partial, no 2nd and 3rd contact */
         tret[2] = tret[3] = 0;
-      } else {
+      }
+      else {
         dc[1] = Math.abs(rsminusrm) - dctrmin;
         for (i = 0, t = tjd - twomin; i <= 2; i += 2, t = tjd + twomin) {
           if (this.calc_planet_star(t, ipl, starname, iflagcart, xs) == Swe.ERR){
@@ -3122,13 +3163,14 @@ class Swecl{
   * above.
   */
   swe_azalt(tjd_ut, calc_flag, geopos, atpress, attemp, xin, xaz) {
-    var i;
-    var x = new Array(6);
-    var xra = new Array(3);
-    var armc = this.sl.swe_degnorm(this.sl.swe_sidtime(tjd_ut) * 15 + geopos[0]);
-    var mdd, eps_true, tjd_et;
-    for (i = 0; i < 2; i++)
+    let i;
+    let x = new Array(6);
+    let xra = new Array(3);
+    let armc = this.sl.swe_degnorm(this.sl.swe_sidtime(tjd_ut) * 15 + geopos[0]);
+    let mdd, eps_true, tjd_et;
+    for (i = 0; i < 2; i++){
       xra[i] = xin[i];
+    }
     xra[2] = 1;
     if (calc_flag == Swe.SE_ECL2HOR) {
       tjd_et = tjd_ut + this.sd.getDeltaT(tjd_ut);
@@ -3180,12 +3222,12 @@ class Swecl{
   * equatorial coordinates depending on parameter 'calc_flag'
   */
   swe_azalt_rev(tjd_ut, calc_flag, geopos, xin, xout) {
-    var i;
-    var x = new Array(6), xaz = new Array(3);
-    var geolon = geopos[0];
-    var geolat = geopos[1];
-    var armc = this.sl.swe_degnorm(this.sl.swe_sidtime(tjd_ut) * 15 + geolon);
-    var eps_true, tjd_et, dang;
+    let i;
+    let x = new Array(6), xaz = new Array(3);
+    let geolon = geopos[0];
+    let geolat = geopos[1];
+    let armc = this.sl.swe_degnorm(this.sl.swe_sidtime(tjd_ut) * 15 + geolon);
+    let eps_true, tjd_et, dang;
     for (i = 0; i < 2; i++){
       xaz[i] = xin[i];
     }
@@ -3203,7 +3245,7 @@ class Swecl{
     /* ecliptic positions */
     if (calc_flag == Swe.SE_HOR2ECL) {
       tjd_et = tjd_ut + this.sd.getDeltaT(tjd_ut);
-      this.sw.swe_calc(tjd_et, Swe.SE_ECL_NUT, 0, x, null);
+      this.sw.swe_calc(tjd_et, Swe.SE_ECL_NUT, 0, x);
       eps_true = x[0];
       this.sl.swe_cotrans(xaz, 0, x, 0, eps_true);
       xout[0] = x[0];
@@ -3233,9 +3275,9 @@ class Swecl{
   * @return The converted altitude
   */
   swe_refrac(inalt, atpress, attemp, calc_flag) {
-    var  a, refr;
-    var  pt_factor = atpress / 1010.0 * 283.0 / (273.0 + attemp);
-    var  trualt, appalt;
+    let  a, refr;
+    let  pt_factor = atpress / 1010.0 * 283.0 / (273.0 + attemp);
+    let  trualt, appalt;
 
     /* another algorithm, from Meeus, German, p. 114ff.
      */
@@ -3332,11 +3374,11 @@ class Swecl{
    * The body is above the horizon if the dret[0] != dret[1]
    */
   swe_refrac_extended(inalt, geoalt, atpress, attemp, lapse_rate, calc_flag, dret) {
-    var  refr;
-    var  trualt;
-    var  dip = this.calc_dip(geoalt, atpress, attemp, lapse_rate);
-    var  D, D0, N, y, yy0;
-    var i;
+    let  refr;
+    let  trualt;
+    let  dip = this.calc_dip(geoalt, atpress, attemp, lapse_rate);
+    let  D, D0, N, y, yy0;
+    let i;
     /* make sure that inalt <=90 */
     if( (inalt>90) ){
       inalt=180-inalt;
@@ -3360,10 +3402,12 @@ class Swecl{
         D = this.calc_astronomical_refr(y,atpress,attemp);
         N = y - yy0;
         yy0 = D - D0 - N; /* denominator of derivative */
-        if (N != 0.0 && yy0 != 0.0) /* sic !!! code by Moshier */
+        if (N != 0.0 && yy0 != 0.0){ /* sic !!! code by Moshier */
           N = y - N*(inalt + D - y)/yy0; /* Newton iteration with numerically estimated derivative */
-        else /* Can't do it on first pass */
+        }
+        else{ /* Can't do it on first pass */
           N = inalt + D;
+        }
         yy0 = y;
         D0 = D;
         y = N;
@@ -3395,7 +3439,8 @@ class Swecl{
           dret[1]=inalt;
           dret[2]=refr;
           dret[3]=dip;
-        } else {
+        }
+        else {
           dret[0]=inalt;
           dret[1]=inalt;
           dret[2]=0;
@@ -3419,7 +3464,7 @@ class Swecl{
    * returns let r in degrees
   */
   calc_astronomical_refr(inalt, atpress, attemp) {
-    var  r;
+    let r;
     if (inalt > 17.904104638432) { /* for continuous function, instead of '>15' */
       r = 0.97 / Math.tan(inalt * this.swed.DEGTORAD);
     }
@@ -3439,8 +3484,8 @@ class Swecl{
    * returns dip in degrees
    */
   calc_dip(geoalt, atpress, attemp, lapse_rate) {
-    var  krefr = (0.0342 + lapse_rate) / (0.154 * 0.0238);
-    var  d = 1-1.8480*krefr*atpress/(273.16+attemp)/(273.16+attemp);
+    let  krefr = (0.0342 + lapse_rate) / (0.154 * 0.0238);
+    let  d = 1-1.8480*krefr*atpress/(273.16+attemp)/(273.16+attemp);
     return -180.0/Math.PI * Math.acos(1 / (1 + geoalt / Swe.SwephData.EARTH_RADIUS)) * Math.sqrt(d);
   }
 
@@ -3612,6 +3657,7 @@ class Swecl{
     dcore[2] = D0;
     dcore[3] = cosf1;
     dcore[4] = cosf2;
+
     /**************************
      * phase and umbral magnitude
      **************************/
@@ -4079,13 +4125,13 @@ class Swecl{
   * See <A HREF="Swecl.html#swe_pheno_ut(double, int, int, double, java.lang.StringBuffer)">swe_pheno_ut(...)</A> for missing information.
   */
   swe_pheno(tjd, ipl, iflag, attr) {
-    var i;
-    var xx = new Array(6), xx2 = new Array(6), xxs = new Array(6),
+    let i;
+    let xx = new Array(6), xx2 = new Array(6), xxs = new Array(6),
         lbr = new Array(6), lbr2 = new Array(6), dt = 0, dd;
-    var fac;
-    var T, in2, om, sinB, u1, u2, du;
-    var ph1, ph2, me = new Array(2);
-    var iflagp, epheflag;
+    let fac;
+    let T, in2, om, sinB, u1, u2, du;
+    let ph1, ph2, me = new Array(2);
+    let iflagp, epheflag;
     iflag &= ~(Swe.SEFLG_JPLHOR | Swe.SEFLG_JPLHOR_APPROX);
     /* function calls for Pluto with asteroid number 134340
      * are treated as calls for Pluto as main body SE_PLUTO */
@@ -4258,7 +4304,7 @@ class Swecl{
     }
     /* horizontal parallax */
     if (ipl == Swe.SE_MOON) {
-      var  sinhp, xm =  new Array(6);
+      let  sinhp, xm =  new Array(6);
       /* geocentric horizontal parallax */
       /* Expl.Suppl. to the AA 1984, p.400 */
       if (this.sw.swe_calc(tjd, Math.floor(ipl), epheflag|Swe.SEFLG_TRUEPOS|Swe.SEFLG_EQUATORIAL|Swe.SEFLG_RADIANS, xm) == Swe.ERR)
@@ -4313,7 +4359,7 @@ class Swecl{
 
 
   find_maximum(y00, y11, y2, dx, dxret, yret) {
-    var  a, b, c, x, y;
+    let  a, b, c, x, y;
     c = y11;
     b = (y2 - y00) / 2.0;
     a = (y2 + y00) / 2.0 - c;
@@ -4328,7 +4374,7 @@ class Swecl{
 
 
   find_zero(y00, y11, y2, dx, dxret, dxret2) {
-    var  a, b, c, x1, x2;
+    let  a, b, c, x1, x2;
     c = y11;
     b = (y2 - y00) / 2.0;
     a = (y2 + y00) / 2.0 - c;
@@ -4343,7 +4389,7 @@ class Swecl{
   }
 
   rdi_twilight(rsmi) {
-    var  rdi = 0;
+    let  rdi = 0;
     if ((rsmi & Swe.SE_BIT_CIVIL_TWILIGHT) != 0){
       rdi = 6;
     }
@@ -4419,28 +4465,27 @@ class Swecl{
 
   /* same as swe_rise_trans(), but allows to define the height of the horizon
    * at the point of the rising or setting (horhgt) */  
-  swe_rise_trans_true_hor(tjd_ut, ipl, starname, epheflag, rsmi, geopos, atpress, attemp, horhgt, tret) 
-  {
-    var i, j, k, ii, calc_culm, nculm = -1;
-    var  tjd_et = tjd_ut + this.sd.getDeltaT(tjd_ut);
-    var  xc = new Array(6);
-    var xh = new Array(20);
-    for(var i=0; i<20; i++){
+  swe_rise_trans_true_hor(tjd_ut, ipl, starname, epheflag, rsmi, geopos, atpress, attemp, horhgt, tret){
+    let i, j, k, ii, calc_culm, nculm = -1;
+    let  tjd_et = tjd_ut + this.sd.getDeltaT(tjd_ut);
+    let  xc = new Array(6);
+    let xh = new Array(20);
+    for(let i=0; i<20; i++){
       xh[i] = new Array(6);
     }
-    var ah = new Array(6), aha;
-    var  tculm = new Array(4), tcu, tc = new Array(20), h = new Array(20),
+    let ah = new Array(6), aha;
+    let  tculm = new Array(4), tcu, tc = new Array(20), h = new Array(20),
            t2 = new Array(6), dc = new Array(6);
-    var dtint=new DblObj();
-    var dx=new DblObj();
-    var  rdi, dd = 0;
-    var iflag = epheflag;
-    var jmax = 14;
-    var  t, te, tt, dt, twohrs = 1.0 / 12.0;
-    var  curdist;
-    var do_calc_twilight = false;
+    let dtint=new DblObj();
+    let dx=new DblObj();
+    let  rdi, dd = 0;
+    let iflag = epheflag;
+    let jmax = 14;
+    let  t, te, tt, dt, twohrs = 1.0 / 12.0;
+    let  curdist;
+    let do_calc_twilight = false;
 
-    var do_fixstar = (starname != null && starname.length > 0);
+    let do_fixstar = (starname != null && starname.length > 0);
     if (geopos[2] < Swe.SwephData.SEI_ECL_GEOALT_MIN || geopos[2] > Swe.SwephData.SEI_ECL_GEOALT_MAX) {
       console.error("location for swe_rise_trans() must be between " + Math.floor(Swe.SwephData.SEI_ECL_GEOALT_MIN) + " and " + Math.floor(Swe.SwephData.SEI_ECL_GEOALT_MAX) + " m above sea");
       return Swe.ERR;
@@ -4463,6 +4508,11 @@ class Swecl{
                   geopos, starname,
                   tret);
     }
+
+    if ((rsmi & (Swe.SE_CALC_MTRANSIT | Swe.SE_CALC_ITRANSIT))!=0) {
+      return this.calc_mer_trans(tjd_ut, ipl, epheflag, rsmi, geopos, starname, tret, serr);
+    }
+
     if ((rsmi & ( Swe.SE_CALC_RISE | Swe.SE_CALC_SET))==0) {
       rsmi |= Swe.SE_CALC_RISE;
     }
@@ -4485,21 +4535,23 @@ class Swecl{
     for (ii = 0, t = tjd_ut - twohrs; ii <= jmax; ii++, t += twohrs) {
       tc[ii] = t;
 
-      if (!do_fixstar) {
-        te = t + this.sd.getDeltaT(t);
-        if (this.sw.swe_calc(te, ipl, iflag, xc) == Swe.ERR) {
-          return Swe.ERR;
-        }
+      te = t + this.sd.getDeltaT(t);
+      if (this.sw.swe_calc(te, ipl, iflag, xc) == Swe.ERR) {
+        return Swe.ERR;
       }
+
       /* diameter of object in km */
       if (ii == 0) {
         if ((rsmi & Swe.SE_BIT_DISC_CENTER)!=0) {
           dd = 0;
-        } else if (ipl < Swe.SwephData.NDIAM && ipl >= 0) { // added for ArrayOutOfBoundsException
+        }
+        else if (ipl < Swe.SwephData.NDIAM && ipl >= 0) { // added for ArrayOutOfBoundsException
           dd = Swe.SwephData.pla_diam[ipl];
-        } else if (ipl > Swe.SE_AST_OFFSET) {
+        }
+        else if (ipl > Swe.SE_AST_OFFSET) {
           dd = this.swed.ast_diam * 1000;        /* km -> m */
-        } else {
+        }
+        else {
           dd = 0;
         }
       }
@@ -4507,7 +4559,8 @@ class Swecl{
       if ((rsmi & Swe.SE_BIT_FIXED_DISC_SIZE) != 0) {
         if (ipl == Swe.SE_SUN) {
           curdist = 1.0;
-        } else if (ipl == Swe.SE_MOON) {
+        }
+        else if (ipl == Swe.SE_MOON) {
           curdist = 0.00257;
         }
       }
@@ -4516,9 +4569,10 @@ class Swecl{
       /* true height of center of body */
       this.swe_azalt(t, Swe.SE_EQU2HOR, geopos, atpress, attemp, xc, xh[ii]);
       if ((rsmi & Swe.SE_BIT_DISC_BOTTOM) != 0) {
-        /* true height of bottom point of body */
+        /* tue height of bottom point of body */
         xh[ii][1] -= rdi;
-      } else {
+      }
+      else {
         /* true height of uppermost point of body */
         xh[ii][1] += rdi;
       }
@@ -4526,7 +4580,8 @@ class Swecl{
       if ((rsmi & Swe.SE_BIT_NO_REFRACTION)!=0) {
         xh[ii][1] -= horhgt;
         h[ii] = xh[ii][1];
-      } else {
+      }
+      else {
         this.swe_azalt_rev(t, Swe.SE_HOR2EQU, geopos, xh[ii], xc);
         this.swe_azalt(t, Swe.SE_EQU2HOR, geopos, atpress, attemp, xc, xh[ii]);
         xh[ii][1] -= horhgt;
@@ -4555,10 +4610,8 @@ class Swecl{
           for (i = 0, tt = tcu - dt; i < 3; tt += dt, i++) {
             te = tt + this.sd.getDeltaT(tt);
 
-            if (!do_fixstar) {
-              if (this.sw.swe_calc(te, ipl, iflag, xc) == Swe.ERR) {
-                return Swe.ERR;
-              }
+            if (this.sw.swe_calc(te, ipl, iflag, xc) == Swe.ERR) {
+              return Swe.ERR;
             }
 
             this.swe_azalt(tt, Swe.SE_EQU2HOR, geopos, atpress, attemp, xc, ah);
@@ -4585,18 +4638,17 @@ class Swecl{
           }
           tc[j] = tculm[i];
 
-          if (!do_fixstar) {
-            te = tc[j] + this.sd.getDeltaT(tc[j]);
-            if (this.sw.swe_calc(te, ipl, iflag, xc) == Swe.ERR) {
-              return Swe.ERR;
-
-            }
+          te = tc[j] + this.sd.getDeltaT(tc[j]);
+          if (this.sw.swe_calc(te, ipl, iflag, xc) == Swe.ERR) {
+            return Swe.ERR;
           }
+
           curdist = xc[2];
           if ((rsmi & Swe.SE_BIT_FIXED_DISC_SIZE) != 0) {
             if ( ipl == Swe.SE_SUN ) {
               curdist = 1.0;
-            } else if (ipl == Swe.SE_MOON) {
+            }
+            else if (ipl == Swe.SE_MOON) {
               curdist = 0.00257;
             }
           }
@@ -4607,7 +4659,8 @@ class Swecl{
           if ((rsmi & Swe.SE_BIT_DISC_BOTTOM) != 0) {
             /* true height of bottom point of body */
             ah[1] -= rdi;
-          } else {
+          }
+          else {
             /* true height of uppermost point of body */
             ah[1] += rdi;
           }
@@ -4615,7 +4668,8 @@ class Swecl{
           if ((rsmi & Swe.SE_BIT_NO_REFRACTION)!=0) {
             ah[1] -= horhgt;
             h[j] = ah[1];
-          } else {
+          }
+          else {
             this.swe_azalt_rev(tc[j], Swe.SE_HOR2EQU, geopos, ah, xc);
             this.swe_azalt(tc[j], Swe.SE_EQU2HOR, geopos, atpress, attemp, xc, ah);
             ah[1] -= horhgt;
@@ -4647,18 +4701,17 @@ class Swecl{
       for (i = 0; i < 20; i++) {
         t = (t2[0] + t2[1]) / 2;
 
-        if (!do_fixstar) {
-
-          te = t + this.sd.getDeltaT(t);
-          if (this.sw.swe_calc(te, ipl, iflag, xc) == Swe.ERR) {
-            return Swe.ERR;
-          }
+        te = t + this.sd.getDeltaT(t);
+        if (this.sw.swe_calc(te, ipl, iflag, xc) == Swe.ERR) {
+          return Swe.ERR;
         }
+
         curdist = xc[2];
         if ((rsmi & Swe.SE_BIT_FIXED_DISC_SIZE) != 0) {
           if (ipl == Swe.SE_SUN) {
             curdist = 1.0;
-          } else if (ipl == Swe.SE_MOON) {
+          }
+          else if (ipl == Swe.SE_MOON) {
             curdist = 0.00257;
           }
         }
@@ -4669,7 +4722,8 @@ class Swecl{
         if ((rsmi & Swe.SE_BIT_DISC_BOTTOM) != 0) {
           /* true height of bottom point of body */
           ah[1] -= rdi;
-        } else {
+        }
+        else {
           /* true height of uppermost point of body */
           ah[1] += rdi;
         }
@@ -4677,7 +4731,8 @@ class Swecl{
         if ((rsmi & Swe.SE_BIT_NO_REFRACTION)!=0) {
           ah[1] -= horhgt;
           aha = ah[1];
-        } else {
+        }
+        else {
           this.swe_azalt_rev(t, Swe.SE_HOR2EQU, geopos, ah, xc);
           this.swe_azalt(t, Swe.SE_EQU2HOR, geopos, atpress, attemp, xc, ah);
           ah[1] -= horhgt;
@@ -4687,7 +4742,8 @@ class Swecl{
         if (aha * dc[0] <= 0) {
           dc[1] = aha;
           t2[1] = t;
-        } else {
+        }
+        else {
           dc[0] = aha;
           t2[0] = t;
         }
@@ -4704,12 +4760,12 @@ class Swecl{
 
 
   calc_mer_trans(tjd_ut, ipl, epheflag, rsmi, geopos, starname, tret) {
-    var i;
-    var  tjd_et = tjd_ut + this.sd.getDeltaT(tjd_ut);
-    var  armc, armc0, arxc, x0 = new Array(6), x = new Array(6), t, te;
-    var  mdd;
-    var iflag = epheflag;
-    var do_fixstar = (starname != null && starname.length > 0);
+    let i;
+    let  tjd_et = tjd_ut + this.sd.getDeltaT(tjd_ut);
+    let  armc, armc0, arxc, x0 = new Array(6), x = new Array(6), t, te;
+    let  mdd;
+    let iflag = epheflag;
+    let do_fixstar = (starname != null && starname.length > 0);
     iflag &= Swe.SEFLG_EPHMASK;
     tret.val = 0;
     iflag |= (Swe.SEFLG_EQUATORIAL | Swe.SEFLG_TOPOCTR);
@@ -4734,7 +4790,7 @@ class Swecl{
     if ((rsmi & Swe.SE_CALC_ITRANSIT)!=0) {
       arxc = this.sl.swe_degnorm(arxc + 180);
     }
-    for (var i = 0; i < 4; i++) {
+    for (let i = 0; i < 4; i++) {
       mdd = this.sl.swe_degnorm(x[0] - arxc);
       if (i > 0 && mdd > 180) {
         mdd -= 360;
@@ -4774,65 +4830,65 @@ class Swecl{
   * See <A HREF="Swecl.html#swe_nod_aps_ut(double, int, int, int, double, double, double, double, java.lang.StringBuffer)">swe_nod_aps_ut(...)</A> for missing information.
   */
   swe_nod_aps(tjd_et, ipl, iflag, method, xnasc, xndsc, xperi, xaphe) {
-    var ij, i, j;
-    var iplx;
-    var ipli;
-    var istart, iend;
-    var iflJ2000;
-    var plm;
-    var t = (tjd_et - Swe.SwephData.J2000) / 36525, dt;
-    var x = new Array(6);
-    var xx = new Array(24);
-    var xp = new Array(6);
-    var xobs = new Array(6);
-    var x2000 = new Array(6);
-    var xpOffs=0;
-    var xpos = new Array(3);
-    for(var i=0; i<3; i++){
+    let ij, i, j;
+    let iplx;
+    let ipli;
+    let istart, iend;
+    let iflJ2000;
+    let plm;
+    let t = (tjd_et - Swe.SwephData.J2000) / 36525, dt;
+    let x = new Array(6);
+    let xx = new Array(24);
+    let xp = new Array(6);
+    let xobs = new Array(6);
+    let x2000 = new Array(6);
+    let xpOffs=0;
+    let xpos = new Array(3);
+    for(let i=0; i<3; i++){
       xpos[i] = new Array(6).fill(0.0);
     }
-    var xnorm = new Array(6);
-    var xposm = new Array(6);
-    var xn = new Array(3);
-    for(var i=0; i<3; i++){
+    let xnorm = new Array(6);
+    let xposm = new Array(6);
+    let xn = new Array(3);
+    for(let i=0; i<3; i++){
       xn[i] = new Array(6).fill(0.0);
     }
-    var xs = new Array(3);
-    for(var i=0; i<3; i++){
+    let xs = new Array(3);
+    for(let i=0; i<3; i++){
       xs[i] = new Array(6).fill(0.0);
     }
-    var xq = new Array(3);
-    for(var i=0; i<3; i++){
+    let xq = new Array(3);
+    for(let i=0; i<3; i++){
       xq[i] = new Array(6).fill(0.0);
     }
-    var xa = new Array(3);
-    for(var i=0; i<3; i++){
+    let xa = new Array(3);
+    for(let i=0; i<3; i++){
       xa[i] = new Array(6).fill(0.0);
     }
 
-    var xobs2 = new Array(6), x2 = new Array(6);
-    var xna, xnd, xpe, xap;
-    var xndOffs = 6, xpeOffs = 12, xapOffs = 18;
-    var incl, sema, ecce, parg, ea, vincl, vsema, vecce, pargx, eax;
-    var pedp = this.swed.pldat[Swe.SwephData.SEI_EARTH];
-    var psbdp = this.swed.pldat[Swe.SwephData.SEI_SUNBARY];
-    var pldat=new PlanData();
-    var xsun = psbdp.x;
-    var xear = pedp.x;
-    var ep;
-    var Gmsm, dzmin;
-    var rxy, rxyz, fac, sgn;
-    var sinnode, cosnode, sinincl, cosincl, sinu, cosu, sinE, cosE, cosE2;
-    var uu, ny, ny2, c2, v2, pp, ro, ro2, rn, rn2;
-    var oe;
-    var is_true_nodaps = false;
-    var do_aberr = (iflag &
+    let xobs2 = new Array(6), x2 = new Array(6);
+    let xna, xnd, xpe, xap;
+    let xndOffs = 6, xpeOffs = 12, xapOffs = 18;
+    let incl, sema, ecce, parg, ea, vincl, vsema, vecce, pargx, eax;
+    let pedp = this.swed.pldat[Swe.SwephData.SEI_EARTH];
+    let psbdp = this.swed.pldat[Swe.SwephData.SEI_SUNBARY];
+    let pldat=new PlanData();
+    let xsun = psbdp.x;
+    let xear = pedp.x;
+    let ep;
+    let Gmsm, dzmin;
+    let rxy, rxyz, fac, sgn;
+    let sinnode, cosnode, sinincl, cosincl, sinu, cosu, sinE, cosE, cosE2;
+    let uu, ny, ny2, c2, v2, pp, ro, ro2, rn, rn2;
+    let oe;
+    let is_true_nodaps = false;
+    let do_aberr = (iflag &
                         (Swe.SEFLG_TRUEPOS | Swe.SEFLG_NOABERR))==0;
-    var do_defl = (iflag & Swe.SEFLG_TRUEPOS)==0 &&
+    let do_defl = (iflag & Swe.SEFLG_TRUEPOS)==0 &&
                       (iflag & Swe.SEFLG_NOGDEFL)==0;
-    var do_focal_point = (method & Swe.SE_NODBIT_FOPOINT) != 0;
-    var ellipse_is_bary = false;
-    var iflg0;
+    let do_focal_point = (method & Swe.SE_NODBIT_FOPOINT) != 0;
+    let ellipse_is_bary = false;
+    let iflg0;
     iflag &= ~(Swe.SEFLG_JPLHOR | Swe.SEFLG_JPLHOR_APPROX);
     /* function calls for Pluto with asteroid number 134340
      * are treated as calls for Pluto as main body SE_PLUTO */
@@ -4903,10 +4959,10 @@ class Swecl{
                                                     ipl == Swe.SE_EARTH)) {
       if (ipl == Swe.SE_MOON) {
 //      this.sm.swi_mean_lunar_elements(tjd_et, &xna[0], &xna[3], &xpe[0], &xpe[3]);
-        var xna0=new DblObj(); xna0.val=xna[0];
-        var xna3=new DblObj(); xna3.val=xna[3];
-        var xpe0=new DblObj(); xpe0.val=xpe[0+xpeOffs];
-        var xpe3=new DblObj(); xpe3.val=xpe[3+xpeOffs];
+        let xna0=new DblObj(); xna0.val=xna[0];
+        let xna3=new DblObj(); xna3.val=xna[3];
+        let xpe0=new DblObj(); xpe0.val=xpe[0+xpeOffs];
+        let xpe3=new DblObj(); xpe3.val=xpe[3+xpeOffs];
         this.sm.swi_mean_lunar_elements(tjd_et, xna0, xna3, xpe0, xpe3);
         xna[0]=xna0.val;
         xna[3]=xna3.val;
@@ -5547,18 +5603,18 @@ class Swecl{
    * dgsect is return area (pointer to a double)
    */
   swe_gauquelin_sector(t_ut, ipl, starname, iflag, imeth, geopos, atpress, attemp, dgsect) {
-    var dtmp=new DblObj();
-    var rise_found = true;
-    var set_found = true;
-    var retval;
-    var tret = new Array(3);
-    var t_et, t;
-    var x0 = new Array(6);
-    var eps, nutlo = new Array(2), armc;
-    var epheflag = iflag & Swe.SEFLG_EPHMASK;
-    var do_fixstar = (starname != null && starname.length > 0);
-    var risemeth = 0;
-    var above_horizon = false;
+    let dtmp=new DblObj();
+    let rise_found = true;
+    let set_found = true;
+    let retval;
+    let tret = new Array(3);
+    let t_et, t;
+    let x0 = new Array(6);
+    let eps, nutlo = new Array(2), armc;
+    let epheflag = iflag & Swe.SEFLG_EPHMASK;
+    let do_fixstar = (starname != null && starname.length > 0);
+    let risemeth = 0;
+    let above_horizon = false;
     if (imeth < 0 || imeth > 5) {
       console.error("invalid method: "+imeth);
       return Swe.ERR;

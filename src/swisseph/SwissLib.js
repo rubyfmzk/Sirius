@@ -682,7 +682,6 @@ class SwissLib{
       return this.swi_polcart(l, 0, lOffs, 0);
     }
 
-    
     var xx=[0,0,0];
     var cosl1;
     cosl1 = Math.cos(l[lOffs+1]);
@@ -1958,7 +1957,8 @@ class SwissLib{
     if( secs < 0.5 ) {
       jd0 -= 0.5;
       secs += 0.5;
-    } else {
+    }
+    else {
       jd0 += 0.5;
       secs -= 0.5;
     }
@@ -1975,12 +1975,14 @@ class SwissLib{
       /*printf("gmst iers=%f \n", gmst);*/
       gmst = gmst / 15.0 * 3600.0;
 
-    } else if (prec_model_short >= Swe.SEMOD_PREC_IAU_2006) {
+    }
+    else if (prec_model_short >= Swe.SEMOD_PREC_IAU_2006) {
       tt = (jd0 + this.sd.getDeltaT(jd0) - Swe.SwephData.J2000)/36525.0; /* TT in centuries after J2000 */
       gmst = (((-0.000000002454*tt - 0.00000199708)*tt - 0.0000002926)*tt + 0.092772110)*tt*tt + 307.4771013*(tt-tu) + 8640184.79447825*tu + 24110.5493771;
       msday = 1 + ((((-0.000000012270*tt - 0.00000798832)*tt - 0.0000008778)*tt + 0.185544220)*tt + 8640184.79447825)/(86400.*36525.);
       gmst += msday * secs;
-    } else {
+    }
+    else {
       gmst = (( -6.2e-6*tu + 9.3104e-2)*tu + 8640184.812866)*tu + 24110.54841;
       msday = 1.0 + ((-1.86e-5*tu + 0.186208)*tu + 8640184.812866)/(86400.*36525.);
       gmst += msday * secs;
