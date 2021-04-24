@@ -248,11 +248,14 @@ Swe.SE_HSYS_GAUQUELIN_SECTORS = 'G';
 Swe.SE_HSYS_MORINUS = 'M';
 Swe.SE_HSYS_KRUSINSKI = 'U';
 Swe.SE_HSYS_WHOLE_SIGN = 'W';
+Swe.SEFLG_SWIEPH=2;
 
 Swe.SEFLG_MOSEPH=4;
 Swe.SEFLG_DEFAULTEPH=Swe.SEFLG_MOSEPH;
 Swe.SEFLG_EPHMASK=1|2|Swe.SEFLG_MOSEPH;
 Swe.SE_SIDBITS             =256;
+Swe.SE_SIDBIT_ECL_T0       =256;
+Swe.SE_SIDBIT_SSY_PLANE    =512;
 Swe.SE_SIDM_FAGAN_BRADLEY  = 0;
 Swe.SE_SIDM_LAHIRI         = 1;
 Swe.SE_SIDM_DELUCE         = 2;
@@ -281,10 +284,8 @@ Swe.SE_SIDM_ARYABHATA      =23;
 Swe.SE_SIDM_ARYABHATA_MSUN =24;
 Swe.SE_SIDM_SS_REVATI      =25;
 Swe.SE_SIDM_SS_CITRA       =26;
-
 Swe.SE_SIDM_TRUE_CITRA     =27;
 Swe.SE_SIDM_TRUE_REVATI    =28;
-
 Swe.SE_SIDM_TRUE_PUSHYA    =29;
 Swe.SE_SIDM_USER          =255;
 Swe.SE_MAX_STNAME=256;   // maximum size of fixstar 
@@ -475,6 +476,8 @@ Swe.SE_ECL_OCC_END_DAYLIGHT=16384;   /* occultation ends during the day */
 Swe.SE_ECL_ONE_TRY=32*1024;
 Swe.SE_CALC_RISE          = 1;
 Swe.SE_CALC_SET           = 2;
+Swe.SE_CALC_MTRANSIT      = 4;
+Swe.SE_CALC_ITRANSIT      = 8;
 Swe.SE_BIT_DISC_CENTER   = 256;
                                   /* to be or'ed to SE_CALC_RISE/SET
                                    * if rise or set of disc center is
