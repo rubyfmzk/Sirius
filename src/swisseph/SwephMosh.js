@@ -487,19 +487,19 @@ class SwephMosh{
     T = (tjd-Swe.SwephData.J1900)/36525.0;
     /* Mean anomaly of moon (MP) */
     a = this.sl.swe_degnorm(((1.44e-5*T + 0.009192)*T + 477198.8491)*T + 296.104608);
-    a *= Swe.SwissData.DEGTORAD;
+    a *= this.swed.DEGTORAD;
     smp = Math.sin(a);
     cmp = Math.cos(a);
     s2mp = 2.0*smp*cmp;           /* sin(2MP) */
     c2mp = cmp*cmp - smp*smp;     /* cos(2MP) */
     /* Mean elongation of moon (D) */
     a = this.sl.swe_degnorm(((1.9e-6*T - 0.001436)*T + 445267.1142)*T + 350.737486);
-    a  = 2.0 * Swe.SwissData.DEGTORAD * a;
+    a  = 2.0 * this.swed.DEGTORAD * a;
     s2d = Math.sin(a);
     c2d = Math.cos(a);
     /* Mean distance of moon from its ascending node (F) */
     a = this.sl.swe_degnorm((( -3.e-7*T - 0.003211)*T + 483202.0251)*T + 11.250889);
-    a  *= Swe.SwissData.DEGTORAD;
+    a  *= this.swed.DEGTORAD;
     sf = Math.sin(a);
     cf = Math.cos(a);
     s2f = 2.0*sf*cf;      /* sin(2F) */
@@ -515,7 +515,7 @@ class SwephMosh{
           + 1.274018*sx
           + 0.658309*s2d
           + 0.213616*s2mp
-          - 0.185596*Math.sin( Swe.SwissData.DEGTORAD * M )
+          - 0.185596*Math.sin( this.swed.DEGTORAD * M )
           - 0.114336*s2f;
     /* Ecliptic latitude of the moon */
     a = smp*cf;
@@ -524,18 +524,18 @@ class SwephMosh{
           + 0.280606*(a+sx)               /* sin(MP+F) */
           + 0.277693*(a-sx)               /* sin(MP-F) */
           + 0.173238*(s2d*cf - c2d*sf);   /* sin(2D-F) */
-    B *= Swe.SwissData.DEGTORAD;
+    B *= this.swed.DEGTORAD;
     /* Parallax of the moon */
     p =    0.950724
           +0.051818*cmp
           +0.009531*cx
           +0.007843*c2d
           +0.002824*c2mp;
-    p *= Swe.SwissData.DEGTORAD;
+    p *= this.swed.DEGTORAD;
     /* Elongation of Moon from Sun
      */
     L = this.sl.swe_degnorm(L);
-    L *= Swe.SwissData.DEGTORAD;
+    L *= this.swed.DEGTORAD;
     /* Distance in au */
     a = 4.263523e-5/Math.sin(p);
     /* Convert to rectangular ecliptic coordinates */
@@ -597,7 +597,7 @@ class SwephMosh{
          null, fict_ifl) == Swe.ERR) {
       return Swe.ERR;
     }
-    dmot = 0.9856076686 * Swe.SwissData.DEGTORAD / sema.val / Math.sqrt(sema.val);
+    dmot = 0.9856076686 * this.swed.DEGTORAD / sema.val / Math.sqrt(sema.val);
                                                             /* daily motion */
     if ((fict_ifl.val & FICT_GEO) != 0) {
       dmot /= Math.sqrt(Swe.SwephData.SUN_EARTH_MRAT);
@@ -622,7 +622,7 @@ class SwephMosh{
     E = M = this.sl.swi_mod2PI(mano.val + (tjd - tjd0.val) * dmot); /* mean anomaly of date*/
     /* better E for very high eccentricity and small M */
     if (ecce.val > 0.975) {
-      M2 = M * Swe.SwissData.RADTODEG;
+      M2 = M * this.swed.RADTODEG;
       if (M2 > 150 && M2 < 210) {
         M2 -= 180;
         M_180_or_0 = 180;
@@ -638,7 +638,7 @@ class SwephMosh{
         Msgn = 1;
       }
       if (M2 < 30) {
-        M2 *= Swe.SwissData.DEGTORAD;
+        M2 *= this.swed.DEGTORAD;
         alpha = (1 - ecce.val) / (4 * ecce.val + 0.5);
         beta = M2 / (8 * ecce.val + 1);
         zeta = Math.pow(beta + Math.sqrt(beta * beta + alpha * alpha), 1/3);
@@ -717,7 +717,7 @@ class SwephMosh{
       tequ.val = this.plan_oscu_elem[ipl][1];                   /* equinox */
     }
     if (mano != null) {
-      mano.val = this.plan_oscu_elem[ipl][2] * Swe.SwissData.DEGTORAD; /* mean anomaly */
+      mano.val = this.plan_oscu_elem[ipl][2] * this.swed.DEGTORAD; /* mean anomaly */
     }
     if (sema != null) {
       sema.val = this.plan_oscu_elem[ipl][3];                   /* semi-axis */
@@ -726,13 +726,13 @@ class SwephMosh{
       ecce.val = this.plan_oscu_elem[ipl][4];                   /* eccentricity */
     }
     if (parg != null) {
-      parg.val = this.plan_oscu_elem[ipl][5] * Swe.SwissData.DEGTORAD; /* arg. of peri. */
+      parg.val = this.plan_oscu_elem[ipl][5] * this.swed.DEGTORAD; /* arg. of peri. */
     }
     if (node != null) {
-      node.val = this.plan_oscu_elem[ipl][6] * Swe.SwissData.DEGTORAD;  /* asc. node */
+      node.val = this.plan_oscu_elem[ipl][6] * this.swed.DEGTORAD;  /* asc. node */
     }
     if (incl != null) {
-      incl.val = this.plan_oscu_elem[ipl][7] * Swe.SwissData.DEGTORAD; /* inclination*/
+      incl.val = this.plan_oscu_elem[ipl][7] * this.swed.DEGTORAD; /* inclination*/
     }
     if (pname != null) {
       pname.setLength(0);
