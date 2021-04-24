@@ -973,6 +973,11 @@ class Swemmoon{
     return dcor;
   }
 
+  /* mean lunar node
+   * J            julian day
+   * pol          return array for position and velocity
+   *              (polar coordinates of ecliptic of date)
+   */
   swi_mean_node(J, pol, offs) {
     if(offs === undefined){
       return this.swi_mean_node(J, pol, 0);
@@ -1003,7 +1008,6 @@ class Swemmoon{
     return Swe.OK;
   }
 
-
   corr_mean_apog(J) {
     var J0, dJ, dayscty, dcor, dcor0, dcor1, dfrac;
     var i;
@@ -1021,6 +1025,12 @@ class Swemmoon{
     return dcor;
   }
 
+  /* mean lunar apogee ('dark moon', 'lilith')
+   * J            julian day
+   * pol          return array for position
+   *              (polar coordinates of ecliptic of date)
+   * serr         error return string
+   */
   swi_mean_apog(J, pol, offs) {
     if(offs === undefined){
       return this.swi_mean_apog(J, pol, 0);
@@ -1043,15 +1053,15 @@ class Swemmoon{
     pol[offs] = this.sl.swi_mod2PI((this.SWELP - this.MP) * Swe.SwephData.STR + Math.PI);
     pol[offs+1] = 0;
     pol[offs+2] = Swe.SwephData.MOON_MEAN_DIST * (1 + Swe.SwephData.MOON_MEAN_ECC) / Swe.AUNIT; /* apogee */
-    dcor = this.corr_mean_apog(J) * Swe.SwissData.DEGTORAD;
+    dcor = this.corr_mean_apog(J) * this.swed.DEGTORAD;
     pol[offs] = this.sl.swi_mod2PI(pol[offs] - dcor);
     /* apogee is now projected onto ecliptic */
     node = (this.SWELP - this.NF) * Swe.SwephData.STR;
-    dcor = this.corr_mean_node(J) * Swe.SwissData.DEGTORAD;
+    dcor = this.corr_mean_node(J) * this.swed.DEGTORAD;
     node = this.sl.swi_mod2PI(node - dcor);
     pol[offs] = this.sl.swi_mod2PI(pol[offs] - node);
     this.sl.swi_polcart(pol, offs, pol, offs);
-    this.sl.swi_coortrf(pol, offs, pol, offs, -Swe.SwephData.MOON_MEAN_INCL * Swe.SwissData.DEGTORAD);
+    this.sl.swi_coortrf(pol, offs, pol, offs, -Swe.SwephData.MOON_MEAN_INCL * this.swed.DEGTORAD);
     this.sl.swi_cartpol(pol, offs, pol, offs);
     pol[offs] = this.sl.swi_mod2PI(pol[offs] + node);
     return Swe.OK;
@@ -1176,6 +1186,25 @@ class Swemmoon{
     lx = lx - 1296000.0 * Math.floor( lx/1296000.0 );
     return( lx );
   }
+
+  swi_mean_lunar_elements(tjd, node, dnode, peri, dperi) {
+    let dcor;
+    this.T = (tjd - Swe.SwephData.J2000) / 36525.0;
+    this.T2 = this.T*this.T;
+    this.mean_elements();
+    node.val = this.sl.swe_degnorm((this.SWELP - this.NF) * Swe.SwephData.STR * this.swed.RADTODEG);
+    peri.val = this.sl.swe_degnorm((this.SWELP - this.MP) * Swe.SwephData.STR * this.swed.RADTODEG);
+    this.T -= 1.0 / 36525;
+    this.mean_elements();
+    dnode.val = this.sl.swe_degnorm(node.val - (this.SWELP-this.NF) * Swe.SwephData.STR * this.swed.RADTODEG);
+    dnode.val -= 360;
+    dperi.val = this.sl.swe_degnorm(peri.val - (this.SWELP-this.MP) * Swe.SwephData.STR * this.swed.RADTODEG);
+    dcor = this.corr_mean_node(tjd);
+    node.val = this.sl.swe_degnorm(node.val - dcor);
+    dcor = this.corr_mean_apog(tjd);
+    peri.val = this.sl.swe_degnorm(peri.val - dcor);
+  }
+
 
   mean_elements() {
     var fracT = this.T%1.;
