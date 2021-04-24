@@ -321,6 +321,16 @@ class SwephMosh{
     return Swe.OK;
   }
 
+  /* Moshier ephemeris.
+   * computes heliocentric cartesian equatorial coordinates of
+   * equinox 2000
+   * for earth and a planet
+   * tjd          julian day
+   * ipli         internal SWEPH planet number
+   * xp           array of 6 doubles for planet's position and speed
+   * xe                                  earth's
+   * serr         error string
+   */
   swi_moshplan(tjd, ipli, do_save, xpret, xeret) {
     var i;
     var do_earth = false;
@@ -433,7 +443,9 @@ class SwephMosh{
     return(Swe.OK);
   }
 
-
+  /* Prepare lookup table of sin and cos ( i*Lj )
+   * for required multiple angles
+   */
   sscc (k, arg, n) {
     
     var cu, su, cv, sv, s;
@@ -457,7 +469,11 @@ class SwephMosh{
       }
   }
 
-
+  /* Adjust position from Earth-Moon barycenter to Earth
+   *
+   * J = Julian day number
+   * xemb = rectangular equatorial coordinates of Earth
+   */
   embofs_mosh(tjd, xemb) {
     
     var T, M, a, L, B, p;
@@ -547,6 +563,12 @@ class SwephMosh{
     return sbnam.toString();
   }
 
+  /* computes a planet from osculating elements *
+   * tjd          julian day
+   * ipl          body number
+   * ipli         body number in planetary data structure
+   * iflag        flags
+   */
   swi_osc_el_plan(tjd, xp, ipl, ipli, xearth, xsun) {
     var pqr = new Array(9);
     var x = new Array(6);
@@ -674,6 +696,7 @@ class SwephMosh{
     return Swe.OK;
   }
 
+  /* note: input parameter tjd is required for T terms in elements */
   read_elements_file(ipl, tjd, tjd0, tequ,
                                  mano, sema, ecce,
                                  parg, node, incl,
@@ -683,39 +706,39 @@ class SwephMosh{
     var spIdx=0;
     var elem_found = false;
     var tt = 0;
-      /* file does not exist, use built-in bodies */
-      if (ipl >= Swe.SE_NFICT_ELEM) {
-        return Swe.ERR;
-      }
-      if (tjd0 != null) {
-        tjd0.val = this.plan_oscu_elem[ipl][0];                   /* epoch */
-      }
-      if (tequ != null) {
-        tequ.val = this.plan_oscu_elem[ipl][1];                   /* equinox */
-      }
-      if (mano != null) {
-        mano.val = this.plan_oscu_elem[ipl][2] * Swe.SwissData.DEGTORAD; /* mean anomaly */
-      }
-      if (sema != null) {
-        sema.val = this.plan_oscu_elem[ipl][3];                   /* semi-axis */
-      }
-      if (ecce != null) {
-        ecce.val = this.plan_oscu_elem[ipl][4];                   /* eccentricity */
-      }
-      if (parg != null) {
-        parg.val = this.plan_oscu_elem[ipl][5] * Swe.SwissData.DEGTORAD; /* arg. of peri. */
-      }
-      if (node != null) {
-        node.val = this.plan_oscu_elem[ipl][6] * Swe.SwissData.DEGTORAD;  /* asc. node */
-      }
-      if (incl != null) {
-        incl.val = this.plan_oscu_elem[ipl][7] * Swe.SwissData.DEGTORAD; /* inclination*/
-      }
-      if (pname != null) {
-        pname.setLength(0);
-        pname.append(this.plan_fict_nam[ipl]);
-      }
-      return Swe.OK;
+    /* file does not exist, use built-in bodies */
+    if (ipl >= Swe.SE_NFICT_ELEM) {
+      return Swe.ERR;
+    }
+    if (tjd0 != null) {
+      tjd0.val = this.plan_oscu_elem[ipl][0];                   /* epoch */
+    }
+    if (tequ != null) {
+      tequ.val = this.plan_oscu_elem[ipl][1];                   /* equinox */
+    }
+    if (mano != null) {
+      mano.val = this.plan_oscu_elem[ipl][2] * Swe.SwissData.DEGTORAD; /* mean anomaly */
+    }
+    if (sema != null) {
+      sema.val = this.plan_oscu_elem[ipl][3];                   /* semi-axis */
+    }
+    if (ecce != null) {
+      ecce.val = this.plan_oscu_elem[ipl][4];                   /* eccentricity */
+    }
+    if (parg != null) {
+      parg.val = this.plan_oscu_elem[ipl][5] * Swe.SwissData.DEGTORAD; /* arg. of peri. */
+    }
+    if (node != null) {
+      node.val = this.plan_oscu_elem[ipl][6] * Swe.SwissData.DEGTORAD;  /* asc. node */
+    }
+    if (incl != null) {
+      incl.val = this.plan_oscu_elem[ipl][7] * Swe.SwissData.DEGTORAD; /* inclination*/
+    }
+    if (pname != null) {
+      pname.setLength(0);
+      pname.append(this.plan_fict_nam[ipl]);
+    }
+    return Swe.OK;
   }
 
   check_t_terms(t, sinp, doutp) {
