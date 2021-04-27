@@ -35,7 +35,6 @@ $pl.latitude = 0;
 $pl.house = "";
 
 $pl.planetNames = {
-
   Sun: Swe.SE_SUN,
   Moon: Swe.SE_MOON,
   Mercury: Swe.SE_MERCURY,

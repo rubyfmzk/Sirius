@@ -1160,7 +1160,6 @@ class SwissEph{
   * @see SweDate#setGlobalTidalAcc(double)
   */
   swe_pheno(tjd, ipl, iflag, attr) {
-console.log(444,tjd,this.sc);
     if (this.sc==null) {
       this.sc=new Swecl(this, this.sl, this.sm, this.swed);
     }

@@ -2892,7 +2892,7 @@ console.log(2, dc, retflag);
               break;
             }
           }
-          dc[i] = Math.acos(sl.swi_dot_prod_unit(xs, xm)) * this.swed.RADTODEG;
+          dc[i] = Math.acos(this.sl.swi_dot_prod_unit(xs, xm)) * this.swed.RADTODEG;
           rmoon = Math.asin(this.RMOON / lm[2]) * this.swed.RADTODEG;
           rsun = Math.asin(drad / ls[2]) * this.swed.RADTODEG;
           dc[i] -= (rmoon + rsun);
@@ -3672,9 +3672,9 @@ console.log(2, dc, retflag);
     for (i = 0; i <= 2; i++){
       e[i] /= dsm;
     }
-    f1 = ((RSUN - REARTH) / dsm);
+    f1 = ((this.RSUN - this.REARTH) / dsm);
     cosf1 = Math.sqrt(1 - f1 * f1);
-    f2 = ((RSUN + REARTH) / dsm);
+    f2 = ((this.RSUN + this.REARTH) / dsm);
     cosf2 = Math.sqrt(1 - f2 * f2);
     /* distance of earth from fundamental plane */
     s0 = -this.sw.dot_prod(rm, e);
@@ -3703,14 +3703,17 @@ console.log(2, dc, retflag);
     if (d0 / 2 >= r0 + rmoon / cosf1) {
       retc = Swe.SE_ECL_TOTAL;
       attr[0] = (d0 / 2 - r0 + rmoon) / dmoon;
-    } else if (d0 / 2 >= r0 - rmoon / cosf1) {
+    }
+    else if (d0 / 2 >= r0 - rmoon / cosf1) {
       retc = Swe.SE_ECL_PARTIAL;
       attr[0] = (d0 / 2 - r0 + rmoon) / dmoon;
-    } else if (D0 / 2 >= r0 - rmoon / cosf2) {
+    }
+    else if (D0 / 2 >= r0 - rmoon / cosf2) {
       retc = Swe.SE_ECL_PENUMBRAL;
       attr[0] = 0;
-    } else {
-      console.log("no lunar eclipse at tjd = "+tjd);
+    }
+    else {
+      //console.log("no lunar eclipse at tjd = "+tjd);
     }
     attr[8] = attr[0];
     /**************************
@@ -3722,11 +3725,11 @@ console.log(2, dc, retflag);
     }
     /* saros series and member */
     for (i = 0; i < this.NSAROS_LUNAR; i++) {
-      d = (tjd_ut - saros_data_lunar[i].tstart) / SAROS_CYCLE;
+      d = (tjd_ut - this.saros_data_lunar[i].tstart) / this.SAROS_CYCLE;
       if (d < 0) continue;
       j = parseInt(d);
       if ((d - j) * this.SAROS_CYCLE < 2) {
-        attr[9] = parseFloat(saros_data_lunar[i].series_no);
+        attr[9] = parseFloat(this.saros_data_lunar[i].series_no);
         attr[10] = parseFloat(j) + 1;
         break;
       }
@@ -4045,8 +4048,7 @@ console.log(2, dc, retflag);
    * attr[10]     saros series member number
    *         declare as attr[20] at least !
    */
-  swe_lun_eclipse_when_loc(tjd_start, ifl,
-       geopos, tret, attr, backward) {
+  swe_lun_eclipse_when_loc(tjd_start, ifl, geopos, tret, attr, backward) {
     let retflag = 0, retflag2 = 0;
     let tjdr = new DblObj(), tjds = new DblObj();
     let tjd_max = 0;
@@ -4198,11 +4200,9 @@ console.log(2, dc, retflag);
     /*
      * geocentric planet
      */
-console.log(222,tjd, ipl, iflag | Swe.SEFLG_XYZ, xx);
     if (this.sw.swe_calc(tjd, ipl, iflag | Swe.SEFLG_XYZ, xx) == Swe.ERR) {
       return Swe.ERR;
     }
-console.log(ipl);
     if (this.sw.swe_calc(tjd, ipl, iflag, lbr) == Swe.ERR) {
       return Swe.ERR;
     }
@@ -4225,7 +4225,6 @@ console.log(ipl);
       /*
        * heliocentric planet at tjd - dt
        */
-console.log(ipl);
       if (this.sw.swe_calc(tjd - dt, ipl, iflagp | Swe.SEFLG_XYZ, xx2) == Swe.ERR) {
         return Swe.ERR;
       }
@@ -4263,7 +4262,6 @@ console.log(ipl);
     /*
      * apparent magnitude
      */
-console.log(ipl);
     if (ipl > Swe.SE_AST_OFFSET ||
         (ipl < this.NMAG_ELEM && this.mag_elem[ipl][0] < 99)) {
       if (ipl == Swe.SE_SUN) {
