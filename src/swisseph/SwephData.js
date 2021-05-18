@@ -14,7 +14,7 @@
 
   Copyright 2020- Ruby Fumizuki
   https://rubyfmzk.com
-  https://github.com/rubyfmzk/Y2J
+  https://github.com/rubyfmzk/Pluto
   rubyfmzk@gmail.com
 */
 /*
@@ -367,3 +367,69 @@ Swe.SwephData.IS_MAIN_ASTEROID = 3;
 
 Swe.SwephData.DO_SAVE = true;
 Swe.SwephData.NO_SAVE = false;
+
+
+
+///////////////////////////////////////////////////////////////
+// CHIRON: ////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+// Swe.SwephData.CHIRON_MAX_LON_SPEED = 0.1481;
+// Swe.SwephData.CHIRON_MIN_LON_SPEED = -0.08136;
+// Swe.SwephData.CHIRON_MAX_LON_ACCEL = 0.001985;
+// Swe.SwephData.CHIRON_MIN_LON_ACCEL = -0.002076;
+// Swe.SwephData.CHIRON_MAX_TOPO_LON_SPEED = 0.1490;
+// Swe.SwephData.CHIRON_MIN_TOPO_LON_SPEED = -0.0826;
+// Swe.SwephData.CHIRON_MAX_TOPO_LON_ACCEL = 0.00892;
+// Swe.SwephData.CHIRON_MIN_TOPO_LON_ACCEL = -0.0091;
+// Swe.SwephData.CHIRON_MAX_HELIO_LON_SPEED = 0.048572;
+// Swe.SwephData.CHIRON_MIN_HELIO_LON_SPEED = 0.008467;
+// Swe.SwephData.CHIRON_MAX_HELIO_LON_ACCEL = 0.000036235;
+// Swe.SwephData.CHIRON_MIN_HELIO_LON_ACCEL = -0.000035949;
+// Swe.SwephData.CHIRON_MAX_LAT_SPEED = 0.01538;
+// Swe.SwephData.CHIRON_MIN_LAT_SPEED = -0.01344;
+// Swe.SwephData.CHIRON_MAX_LAT_ACCEL = 0.000313;
+// Swe.SwephData.CHIRON_MIN_LAT_ACCEL = -0.0002607;
+// Swe.SwephData.CHIRON_MAX_TOPO_LAT_SPEED = 0.01574;
+// Swe.SwephData.CHIRON_MIN_TOPO_LAT_SPEED =  -0.01368;
+// Swe.SwephData.CHIRON_MAX_TOPO_LAT_ACCEL = 0.0033643;
+// Swe.SwephData.CHIRON_MIN_TOPO_LAT_ACCEL = -0.003132;
+// Swe.SwephData.CHIRON_MAX_HELIO_LAT_SPEED = 0.0066239;
+// Swe.SwephData.CHIRON_MIN_HELIO_LAT_SPEED = -0.0018657;
+// Swe.SwephData.CHIRON_MAX_HELIO_LAT_ACCEL = 0.000011620;
+// Swe.SwephData.CHIRON_MIN_HELIO_LAT_ACCEL = -0.000017098;
+// Swe.SwephData.CHIRON_MAX_DIST_SPEED = 0.01867;
+// Swe.SwephData.CHIRON_MIN_DIST_SPEED = -0.018683;
+// Swe.SwephData.CHIRON_MAX_DIST_ACCEL = 0.0003195;
+// Swe.SwephData.CHIRON_MIN_DIST_ACCEL = -0.0002838;
+// Swe.SwephData.CHIRON_MAX_TOPO_DIST_SPEED = 0.01883;
+// Swe.SwephData.CHIRON_MIN_TOPO_DIST_SPEED = -0.01884;
+// Swe.SwephData.CHIRON_MAX_TOPO_DIST_ACCEL = 0.001324;
+// Swe.SwephData.CHIRON_MIN_TOPO_DIST_ACCEL = -0.001288;
+// Swe.SwephData.CHIRON_MAX_HELIO_DIST_SPEED = 0.00208240;
+// Swe.SwephData.CHIRON_MIN_HELIO_DIST_SPEED = -0.0020787;
+// Swe.SwephData.CHIRON_MAX_HELIO_DIST_ACCEL = 0.0000023777;
+// Swe.SwephData.CHIRON_MIN_HELIO_DIST_ACCEL = -0.0000012240;
+// Swe.SwephData.CHIRON_MAX_RECT_SPEED = 0.1481655;
+// Swe.SwephData.CHIRON_MIN_RECT_SPEED = -0.0786760;
+// Swe.SwephData.CHIRON_MAX_RECT_ACCEL = 1./0.;
+// Swe.SwephData.CHIRON_MIN_RECT_ACCEL = 1./0.;
+// Swe.SwephData.CHIRON_MAX_TOPO_RECT_SPEED = 0.1658259;
+// Swe.SwephData.CHIRON_MIN_TOPO_RECT_SPEED = -0.1149048;
+// Swe.SwephData.CHIRON_MAX_TOPO_RECT_ACCEL = 1./0.;
+// Swe.SwephData.CHIRON_MIN_TOPO_RECT_ACCEL = 1./0.;
+// Swe.SwephData.CHIRON_MAX_HELIO_RECT_SPEED = 1./0.;
+// Swe.SwephData.CHIRON_MIN_HELIO_RECT_SPEED = 1./0.;
+// Swe.SwephData.CHIRON_MAX_HELIO_RECT_ACCEL = 1./0.;
+// Swe.SwephData.CHIRON_MIN_HELIO_RECT_ACCEL = 1./0.;
+// Swe.SwephData.CHIRON_MAX_DECL_SPEED = 0.0383058;
+// Swe.SwephData.CHIRON_MIN_DECL_SPEED = -0.0553686;
+// Swe.SwephData.CHIRON_MAX_DECL_ACCEL = 1./0.;
+// Swe.SwephData.CHIRON_MIN_DECL_ACCEL = 1./0.;
+// Swe.SwephData.CHIRON_MAX_TOPO_DECL_SPEED = 0.0447469;
+// Swe.SwephData.CHIRON_MIN_TOPO_DECL_SPEED = -0.0645226;
+// Swe.SwephData.CHIRON_MAX_TOPO_DECL_ACCEL = 1./0.;
+// Swe.SwephData.CHIRON_MIN_TOPO_DECL_ACCEL = 1./0.;
+// Swe.SwephData.CHIRON_MAX_HELIO_DECL_SPEED = 1./0.;
+// Swe.SwephData.CHIRON_MIN_HELIO_DECL_SPEED = 1./0.;
+// Swe.SwephData.CHIRON_MAX_HELIO_DECL_ACCEL = 1./0.;
+// Swe.SwephData.CHIRON_MIN_HELIO_DECL_ACCEL = 1./0.;

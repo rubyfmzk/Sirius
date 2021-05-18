@@ -1,5 +1,5 @@
 /*
-  Pluto.js version 0.3
+  Pluto.js version 0.5
 
   Pluto.js is ephemeris calculator for Sun, Moon and Planets.
   This file is made from the Swiss Ephemeris Free Edition,
@@ -35,7 +35,6 @@ $pl.latitude = 0;
 $pl.house = "";
 
 $pl.planetNames = {
-
   Sun: Swe.SE_SUN,
   Moon: Swe.SE_MOON,
   Mercury: Swe.SE_MERCURY,

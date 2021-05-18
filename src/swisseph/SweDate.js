@@ -14,7 +14,7 @@
 
   Copyright 2020- Ruby Fumizuki
   https://rubyfmzk.com
-  https://github.com/rubyfmzk/Y2J
+  https://github.com/rubyfmzk/Pluto
   rubyfmzk@gmail.com
 */
 /*
@@ -103,7 +103,7 @@
 */
 class SweDate{
   constructor(year, month, day, hour, calType){
-    this.sw =  Swe.SwissData;
+    this.swed = Swe.SwissData;
     this.SUNDAY = 0;
     this.MONDAY = 1,
     this.TUESDAY = 2;
@@ -285,6 +285,18 @@ class SweDate{
     }
   };
 
+  /**
+  * Queries the Julian Day number of the given date that is interpreted as
+  * a date in the given calendar system - this is a static method.
+  * @param year The year of the date
+  * @param month The month of the date
+  * @param day The day-number of the date
+  * @param hour The hour of the day
+  * @param calType calendar type (Gregorian or Julian calendar system)
+  * @return Julian Day number
+  * @see #SE_GREG_CAL
+  * @see #SE_JUL_CAL
+  */
   getJulDay(year, month, day, hour, calType) {
     if(year === undefined){
       return this.jd;
@@ -297,6 +309,27 @@ class SweDate{
     return this.swe_julday(year, month, day, hour, calType);
   };
 
+  /**
+  * Queries the day of the week of the given date that is interpreted as
+  * being a date in the given calendar system. Sunday is represented by 0,
+  * Saturday by 6. Any discontinuity in the sequence of weekdays is
+  * <b>not</b> taken into account! <B>Attention: the numbers are different
+  * from the numbers returned by the java.awt.Calendar class!</B>
+  * @return Number of the day of week
+  * @param year The year of the date
+  * @param month The month of the date
+  * @param day The day-number of the date
+  * @param calType calendar type (Gregorian or Julian calendar system)
+  * @see #SE_GREG_CAL
+  * @see #SE_JUL_CAL
+  * @see #SUNDAY
+  * @see #MONDAY
+  * @see #TUESDAY
+  * @see #WEDNESDAY
+  * @see #THURSDAY
+  * @see #FRIDAY
+  * @see #SATURDAY
+  */
   getDayOfWeekNr(year, month, day, calType) {
     //引数がゼロ
     if(year === undefined){
@@ -314,6 +347,13 @@ class SweDate{
     }
   }
 
+  /**
+  * Queries the type of calendar in effect - Gregorian or Julian calendar.
+  * This will effect what date you will get back for a given Julian Day.
+  * @return Calendar type
+  * @see #SE_GREG_CAL
+  * @see #SE_JUL_CAL
+  */
   getCalendarType() {
     return this.calType;
   }
@@ -334,6 +374,14 @@ class SweDate{
     return this.hour;
   }
 
+  /**
+  * Queries the delta T value for the given Julian Day number - this is a
+  * static method. Delta T is calculated with a tidal acceleration of
+  * SE_TIDAL_DEFAULT.
+  * @param tjd Julian Day number
+  * @return delta T
+  * @see swisseph.SweConst#SE_TIDAL_DEFAULT
+  */
   getDeltaT(tjd) {
     if(tjd === undefined){
       if (this.deltatIsValid) { return this.deltaT; }
@@ -346,6 +394,11 @@ class SweDate{
     return this.calc_deltaT(tjd);
   }
 
+  /**
+  * This will return a java.util.Date object from a julian day number.
+  * @param jd The julian day number for which to create a Date object.
+  * @return the Date object for the JD
+  */
   getDate(jd) {
     //引数がoffsetである
     if(Math.floor(jd) === jd){
@@ -357,6 +410,13 @@ class SweDate{
     return new Date(millis);
   }
 
+  // Write access: //
+  /**
+  * Sets the new Julian Day for this object. This operation does NOT
+  * change the calendar type (Gregorian or Julian calendar). Use methods
+  * setCalendarType() or updateCalendarType() for this.
+  * @param newJD Julian Day number
+  */
   setJulDay(newJD) {
     this.jd=newJD;
     this.deltatIsValid=false;
@@ -367,6 +427,16 @@ class SweDate{
     this.hour=dt.hour;
   }
 
+  /**
+  * Sets the calendar type for this object.
+  * @param newCalType Calendar type (Greogorian or Julian calendar)
+  * @param keepDate Determines, if the date or the julian day should
+  * be fix in this operation.
+  * @see #SE_GREG_CAL
+  * @see #SE_JUL_CAL
+  * @see #SE_KEEP_DATE
+  * @see #SE_KEEP_JD
+  */
   setCalendarType(newCalType, keepDate) {
     if (this.calType != this.newCalType) {
       this.calType=newCalType;
@@ -384,11 +454,25 @@ class SweDate{
     }
   }
 
+  /**
+  * Update the calendar type according to the Gregorian calendar start
+  * date and the date of this object.
+  */
   updateCalendarType() {
     this.calType=(this.jdCO<=this.jd?this.SE_GREG_CAL:this.SE_JUL_CAL);;
   }
 
-
+  /**
+  * Sets a new date for this object. The input can be checked, if it is a
+  * valid date and can be modified, if not. See parameter "check".
+  * @param newYear the year-part of the new date
+  * @param newMonth the month-part of the new date [1-12]
+  * @param newDay the day-part of the new date [1-31]
+  * @param newHour the hour of the new date
+  * @param check if true it returns if the date is valid and converts the
+  * the date into a valid date
+  * @return true, if check==false, or if the date is valid. False otherwise
+  */
   setDate(newYear, newMonth, newDay, newHour, check) {
     this.year=newYear;
     this.month=newMonth;
@@ -482,25 +566,32 @@ class SweDate{
     return true;
   }
 
-  checkDate() {
-    var cd = checkDate(this.year, this.month, this.day, this.hour);
-    return cd;
-  }
-
-
-  checkDate(year, month, day) {
-    var cd = checkDate(year, month, day, 0.0);
-    return cd;
-  }
-
+  /**
+  * Checks the given date to see, if it is a valid date.
+  * @param year the year, for which is to be checked
+  * @param month the month, for which is to be checked
+  * @param day the day, for which is to be checked
+  * @param hour the hour, for which is to be checked
+  * @return true, if the date is valid, false, if not
+  */
   checkDate(year, month, day, hour) {
+    if(year === undefined){
+      return this.checkDate(this.year, this.month, this.day, this.hour);
+    }
 
-    var jd=this.swe_julday(year,month,day,hour,this.SE_GREG_CAL);
-    var dt=this.swe_revjul(jd,this.SE_GREG_CAL);
+    if(hour === undefined){
+      return this.checkDate(year, month, day, 0.0);
+    }
+
+    let jd = this.swe_julday(year, month, day, hour, this.SE_GREG_CAL);
+    let dt = this.swe_revjul(jd, this.SE_GREG_CAL);
 
     return (dt.year==year && dt.month==month && dt.day==day);
   }
 
+  /**
+  * Makes the date to be a valid date.
+  */
   makeValidDate() {
     var jd=this.swe_julday(this.year,this.month,this.day,this.hour,this.SE_GREG_CAL);
     var dt=this.swe_revjul(jd,this.SE_GREG_CAL);
@@ -510,10 +601,33 @@ class SweDate{
     this.hour=dt.hour;
   }
 
+  /**
+  * Returns the julian day number on which the Gregorian calendar system
+  * comes to be in effect.
+  * @return Julian day number of the date, the Gregorian calendar started
+  */
   getGregorianChange() {
     return this.jdCO;
   }
 
+  /**
+  * Changes the date of the start of the Gregorian calendar system.
+  * This method will keep the date and change the julian day number
+  * of the date of this SweDate object if required.
+  * @param year The year (in Gregorian system) for the new start date
+  * @param month The month (in Gregorian system) for the new start date.
+  * Adversely to java.util.Calendar, the month is to be given in the
+  * range of 1 for January to 12 for December!
+  * @param day The day of the month (in Gregorian system, from 1 to 31)
+  * for the new start date
+  */
+  /**
+  * Changes the date of the start of the Gregorian calendar system.
+  * This method will keep the julian day number and change year,
+  * month and day of the date of this SweDate object if required.
+  * @param newJDCO The julian day number, on which the Gregorian calendar
+  * came into effect.
+  */
   setGregorianChange(year, month, day) {
     //引数が1つの場合
     if(month === undefined){
@@ -544,10 +658,26 @@ class SweDate{
                          this.calType);
   }
 
+  /**
+  * Returns the tidal acceleration used in calculations of delta T.<br>
+  * Was <code>double swe_get_tid_acc()</code> in the original
+  * C sources.
+  * @return Tidal acceleration
+  */
   getGlobalTidalAcc() {
     return this.tid_acc;
   }
 
+  /* function sets tidal acceleration of the Moon.
+   * t_acc can be either
+   * - the value of the tidal acceleration in arcsec/cty^2
+   * - the DE number of an ephemeris; in this case the tidal acceleration
+   *   of the Moon will be set consistent with that ephemeris.
+   * - SE_TIDAL_AUTOMATIC, 
+   */
+  /**
+  * @see #setGlobalTidalAcc(double)
+  */
   swe_set_tid_acc(t_acc) {
     this.setGlobalTidalAcc(t_acc);
   }
@@ -556,6 +686,26 @@ class SweDate{
     this.setGlobalTidalAcc(tjd_ut, iflag, denum);
   }
 
+  /**
+  * Sets the tidal acceleration used in calculations of delta T.
+  * Corresponds to <code>void swi_set_tid_acc(double, int, int)</code> method in the original
+  * C version.
+  * @param t_acc tidal acceleration
+  * @param iflag
+  * @param denum
+  * @see #setGlobalTidalAcc(double)
+  * @see swisseph.SweConst#SE_TIDAL_DE403
+  * @see swisseph.SweConst#SE_TIDAL_DE404
+  * @see swisseph.SweConst#SE_TIDAL_DE405
+  * @see swisseph.SweConst#SE_TIDAL_DE406
+  * @see swisseph.SweConst#SE_TIDAL_DE421
+  * @see swisseph.SweConst#SE_TIDAL_DE430
+  * @see swisseph.SweConst#SE_TIDAL_DE431
+  * @see swisseph.SweConst#SE_TIDAL_DE200
+  * @see swisseph.SweConst#SE_TIDAL_26
+  * @see swisseph.SweConst#SE_TIDAL_AUTOMATIC
+  * @see swisseph.SweConst#SE_TIDAL_DEFAULT
+  */
   setGlobalTidalAcc(tjd_ut, iflag, denum) {
     //引数が1つの場合
     if(iflag === undefined){
@@ -597,13 +747,23 @@ class SweDate{
       case 431: this.tid_acc = Swe.SE_TIDAL_DE431; break;
       default: this.tid_acc = Swe.SE_TIDAL_DEFAULT; break;
     }
-
   }
 
+  /**
+  * This method is needed to have a consistent global SwissData object "swed",
+  * whose contents may determine the tidal acceleration. Called from the
+  * SwissEph constructor only.
+  * @param swiss The SwissEph object to be used
+  */
   setSwissEphObject(swiss) {
     this.sw = swiss;
   }
 
+  /**
+  * Returns the date, calendar type (gregorian / julian), julian day
+  * number and the deltaT value of this object.
+  * @return Infos about this object
+  */
   toString() {
     var hour = getHour();
     var h = (hour<10?" ":"") + Math.floor(hour) + ":";
@@ -613,15 +773,63 @@ class SweDate{
     h += (hour<10?"0":"") + hour ;
 
     return "(YYYY/MM/DD) " +
-           getYear() + "/" +
-           (getMonth()<10?"0":"") + getMonth() + "/" +
-           (getDay()<10?"0":"") + getDay() + ", " +
+           this.getYear() + "/" +
+           (this.getMonth()<10?"0":"") + this.getMonth() + "/" +
+           (this.getDay()<10?"0":"") + this.getDay() + ", " +
            h + "h " +
-           (getCalendarType()?"(greg)":"(jul)") + "\n" +
-           "Jul. Day: " + getJulDay() + "; " +
-           "DeltaT: " + getDeltaT();
+           (this.getCalendarType()?"(greg)":"(jul)") + "\n" +
+           "Jul. Day: " + this.getJulDay() + "; " +
+           "DeltaT: " + this.getDeltaT();
   }
 
+/*************** swe_julday ********************************************
+ * This function returns the absolute Julian day number (JD)
+ * for a given calendar date.
+ * The arguments are a calendar date: day, month, year as integers,
+ * hour as double with decimal fraction.
+ * If gregflag = SE_GREG_CAL (1), Gregorian calendar is assumed,
+ * if gregflag = SE_JUL_CAL (0),Julian calendar is assumed.
+
+ The Julian day number is a system of numbering all days continously
+ within the time range of known human history. It should be familiar
+ to every astrological or astronomical programmer. The time variable
+ in astronomical theories is usually expressed in Julian days or
+ Julian centuries (36525 days per century) relative to some start day;
+ the start day is called 'the epoch'.
+ The Julian day number is a double representing the number of
+ days since JD = 0.0 on 1 Jan -4712, 12:00 noon (in the Julian calendar).
+
+ Midnight has always a JD with fraction .5, because traditionally
+ the astronomical day started at noon. This was practical because
+ then there was no change of date during a night at the telescope.
+ From this comes also the fact the noon ephemerides were printed
+ before midnight ephemerides were introduced early in the 20th century.
+
+ NOTE: The Julian day number must not be confused with the Julian
+ calendar system.
+
+ Be aware the we always use astronomical year numbering for the years
+ before Christ, not the historical year numbering.
+ Astronomical years are done with negative numbers, historical
+ years with indicators BC or BCE (before common era).
+ Year 0 (astronomical)          = 1 BC
+ year -1 (astronomical)         = 2 BC
+ etc.
+
+ Original author: Marc Pottenger, Los Angeles.
+ with bug fix for year < -4711   15-aug-88 by Alois Treindl
+ (The parameter sequence m,d,y still indicates the US origin,
+  be careful because the similar function date_conversion() uses
+  other parameter sequence and also Astrodienst relative juldate.)
+
+ References: Oliver Montenbruck, Grundlagen der Ephemeridenrechnung,
+             Verlag Sterne und Weltraum (1987), p.49 ff
+
+ related functions: swe_revjul() reverse Julian day number: compute the
+                               calendar date from a given JD
+                    date_conversion() includes test for legal date values
+                    and notifies errors like 32 January.
+ ****************************************************************/
   swe_julday(year, month, day, hour, calType) {
     var jd, u, u0, u1, u2;
     u = year;
@@ -646,6 +854,10 @@ class SweDate{
     return jd;
   }
 
+  //////////////////////////////////////////////////////////////////////
+  // Erzeugt aus einem jd/calType Jahr, Monat, Tag und Stunde.        //
+  // It does NOT change any global variables.                         //
+  //////////////////////////////////////////////////////////////////////
   swe_revjul (jd, calType) {
     var dt=new IDate();
     var u0,u1,u2,u3,u4;
@@ -672,12 +884,14 @@ class SweDate{
     return dt;
   }
 
+  /* returns DeltaT (ET - UT) in days
+   * double tjd   =   julian day in UT
+   */
   calc_deltaT(tjd) {
-
     var ans = 0;
     var B, Y, Ygreg, dd;
     var iy;
-    var deltat_model = this.sw.astro_models[Swe.SE_MODEL_DELTAT];
+    var deltat_model = this.swed.astro_models[Swe.SE_MODEL_DELTAT];
     if (deltat_model == 0) deltat_model = Swe.SEMOD_DELTAT_DEFAULT;
     /* read additional values from swedelta.txt */
     /*AS_BOOL use_espenak_meeus = DELTAT_ESPENAK_MEEUS_2006;*/
@@ -891,6 +1105,21 @@ class SweDate{
     return ans / 86400.0;
   }
 
+  /* Read delta t values from external file.
+   * record structure: year(whitespace)delta_t in 0.01 sec.
+   */
+  init_dt() {
+    return this.TABSIZ;
+  }
+
+  /* Astronomical Almanac table is corrected by adding the expression
+   *     -0.000091 (ndot + 26)(year-1955)^2  seconds
+   * to entries prior to 1955 (AA page K8), where ndot is the secular
+   * tidal term in the mean motion of the Moon.
+   *
+   * Entries after 1955 are referred to atomic time standards and
+   * are not affected by errors in Lunar or planetary theory.
+   */
   adjust_for_tidacc(ans, Y) {
     var B;
     if( Y < 1955.0 ) {
@@ -901,6 +1130,10 @@ class SweDate{
     return ans;
   }
 
+  /**
+  * Sets the year, month, day, hour, calType and jd fields of this
+  * SweDate instance.
+  */
   initDateFromJD(jd, calType) {
     this.jd=jd;
     this.calType=calType;
@@ -909,9 +1142,12 @@ class SweDate{
     this.month=dt.month;
     this.day=dt.day;
     this.hour=dt.hour;
-
   }
 
+  /**
+  * Sets the year, month, day, hour, calType and jd fields of this
+  * object.
+  */
   setFields(year, month, day, hour, calType) {
     if(calType === undefined){
       var dt=this.swe_revjul(this.jdCO,this.SE_GREG_CAL);
@@ -922,6 +1158,7 @@ class SweDate{
         calType = this.SE_JUL_CAL;
       }
       this.setFields(year, month, day, hour, calType);
+      return
     }
 
     this.year=year;
@@ -932,11 +1169,58 @@ class SweDate{
     this.jd=this.swe_julday(year, month, day, hour, calType);
   }
 
-
+  /** Transform local time to UTC.
+  *
+  * For time zones east of Greenwich, d_timezone is positive.
+  * For time zones west of Greenwich, d_timezone is negative.
+  *
+  * @param iyear Year of the input date (UTC)
+  * @param imonth Month of the input date (UTC, 1 to 12)
+  * @param iday Day of the input date (UTC, 1 to 31)
+  * @param ihour Hour of the input date (UTC, 0 to 23)
+  * @param imin Minute of the input date (UTC, 0 to 59)
+  * @param dsec Second of the input date (UTC, 0.0 to less than 61.0)
+  * @param d_timezone Timezone in hours
+  * @return The converted date fields
+  * @see #getLocalTimeFromUTC(int, int, int, int, int, double, double)
+  */
   getUTCFromLocalTime(iyear, imonth, iday, ihour, imin, dsec, d_timezone) {
     return this.getLocalTimeFromUTC(iyear, imonth, iday, ihour, imin, dsec, -d_timezone);
   };
 
+  /* transform local time to UTC or UTC to local time
+   *
+   * input
+   *   iyear ... dsec     date and time
+   *   d_timezone   timezone offset
+   * output
+   *   iyear_out ... dsec_out
+   *
+   * For time zones east of Greenwich, d_timezone is positive.
+   * For time zones west of Greenwich, d_timezone is negative.
+   *
+   * For conversion from local time to utc, use +d_timezone.
+   * For conversion from utc to local time, use -d_timezone.
+   */
+  /** Transform UTC to local time. This method is identical to
+  * the swe_utc_time_zone() method in the original API from
+  * AstroDienst Zurich.
+  *
+  * For time zones east of Greenwich, d_timezone is positive.
+  * For time zones west of Greenwich, d_timezone is negative.
+  *
+  * @param iyear Year of the input date (UTC)
+  * @param imonth Month of the input date (UTC, 1 to 12)
+  * @param iday Day of the input date (UTC, 1 to 31)
+  * @param ihour Hour of the input date (UTC, 0 to 23)
+  * @param imin Minute of the input date (UTC, 0 to 59)
+  * @param dsec Second of the input date (UTC, 0.0 to less than 61.0)
+  * @param d_timezone Timezone in hours. You can use -d_timezone
+  * to reverse the conversion, but you may also use the
+  * getUTCFromLocalTime() method for this.
+  * @return The converted date fields
+  * @see #getUTCFromLocalTime(int, int, int, int, int, double, double)
+  */
   getLocalTimeFromUTC(iyear, imonth, iday, ihour, imin, dsec, d_timezone) {
     var iyear_out, imonth_out, iday_out, ihour_out, imin_out;
     var dsec_out;
@@ -971,14 +1255,41 @@ class SweDate{
     return new SDate(iyear_out, imonth_out, iday_out, ihour_out, imin_out, dsec_out);
   }
 
+  /* 
+    Read additional leap second dates from external file, if given.
+   */
   init_leapsec() {
     return NLEAP_SECONDS;
   }
 
+  /**
+  * Determines, if the year, month, day, hour, minute and second fields
+  * describe a valid date.
+  * @param iyear Year of the input date (UTC)
+  * @param imonth Month of the input date (UTC, 1 to 12)
+  * @param iday Day of the input date (UTC, 1 to 31)
+  * @param ihour Hour of the input date (UTC, 0 to 23)
+  * @param imin Minute of the input date (UTC, 0 to 59)
+  * @param dsec Second of the input date (UTC, 1.0 to less than 61.0)
+  * @param gregflag true == Gregorian calendar, false == Julian calendar
+  * @return true, if the date is valid, false otherwise.
+  */
   isValidUTCDate(iyear, imonth, iday, ihour, imin, dsec, gregflag) {
     return this.getInvalidUTCDateError(iyear, imonth, iday, ihour, imin, dsec, gregflag) == null;
   }
 
+  /**
+  * Returns a String error message, if the year, month, day, hour, minute and
+  * second fields do not describe a valid date.
+  * @param iyear Year of the input date (UTC)
+  * @param imonth Month of the input date (UTC, 1 to 12)
+  * @param iday Day of the input date (UTC, 1 to 31)
+  * @param ihour Hour of the input date (UTC, 0 to 23)
+  * @param imin Minute of the input date (UTC, 0 to 59)
+  * @param dsec Second of the input date (UTC, 1.0 to less than 61.0)
+  * @param gregflag true == Gregorian calendar, false == Julian calendar
+  * @return null, if the date is valid, otherwise it returns a message in english, describing the error field.
+  */
   getInvalidUTCDateError(iyear, imonth, iday, ihour, imin, dsec, gregflag) {
     var dret = new Array(2);
     var tjd_ut1, tjd_et, tjd_et_1972, dhour, d;
@@ -1015,6 +1326,56 @@ class SweDate{
     return null;
   }
 
+  /**
+  * Calculates the julian day numbers (TT (==ET) and UT1) from a given date.
+  * @param iyear Year of the input date (UTC)
+  * @param imonth Month of the input date (UTC, 1 to 12)
+  * @param iday Day of the input date (UTC, 1 to 31)
+  * @param ihour Hour of the input date (UTC, 0 to 23)
+  * @param imin Minute of the input date (UTC, 0 to 59)
+  * @param dsec Second of the input date (UTC, 1.0 to less than 61.0)
+  * @param gregflag true == Gregorian calendar, false == Julian calendar
+  * @param checkValidInput if true, throws SwissephException, when any of month,
+  * day, hour, minute or second are out of their valid ranges. If false, it
+  * doesn't care about invalid values (e.g. month = 13 or second = 61, even
+  * though there is no leap second on that date and time).
+  * @return an array of two doubles<br>
+  *         first value = Julian day number TT (ET)<br>
+  *         second value = Julian day number UT1<p>
+  *
+  * Note:<pre>
+  * - Before 1972, swe_utc_to_jd() treats its input time as UT1.
+  *   Note: UTC was introduced in 1961. From 1961 - 1971, the length of the
+  *   UTC second was regularly changed, so that UTC remained very close to UT1.
+  * - From 1972 on, input time is treated as UTC.
+  * - If delta_t - nleap - 32.184 &gt; 1, the input time is treated as UT1.
+  *   Note: Like this we avoid errors greater than 1 second in case that
+  *   the leap seconds table (or the Swiss Ephemeris version) is not updated
+  *   for a long time.</pre>
+  * @see #getUTCfromJDET(double, boolean)
+  * @see #getUTCfromJDUT1(double, boolean)
+  * @see #SE_GREG_CAL
+  * @see #SE_JUL_CAL
+  */
+  /*
+   * Input:  Clock time UTC, year, month, day, hour, minute, second (decimal).
+   *         gregflag  Calendar flag
+   *         serr      error string
+   * Output: An array of doubles:
+   *         dret[0] = Julian day number TT (ET)
+   *         dret[1] = Julian day number UT1
+   *
+   * Function returns OK or Error.
+   *
+   * - Before 1972, swe_utc_to_jd() treats its input time as UT1.
+   *   Note: UTC was introduced in 1961. From 1961 - 1971, the length of the
+   *   UTC second was regularly changed, so that UTC remained very close to UT1.
+   * - From 1972 on, input time is treated as UTC.
+   * - If delta_t - nleap - 32.184 > 1, the input time is treated as UT1.
+   *   Note: Like this we avoid errors greater than 1 second in case that
+   *   the leap seconds table (or the Swiss Ephemeris version) is not updated
+   *   for a long time.
+  */
   getJDfromUTC(iyear, imonth, iday, ihour, imin, dsec, gregflag, checkValidInput) {
     var dret = new Array(2);
     var tjd_ut1, tjd_et, tjd_et_1972, dhour, d;
@@ -1032,7 +1393,7 @@ class SweDate{
 
     if (tjd_ut1 < J1972) {
       dret[1] = this.swe_julday(iyear, imonth, iday, dhour, gregflag);
-      dret[0] = dret[1] + getDeltaT(dret[1]);
+      dret[0] = dret[1] + this.getDeltaT(dret[1]);
       return dret;
     }
 
@@ -1074,6 +1435,40 @@ class SweDate{
     return dret;
   }
 
+  /**
+  * Calculates the UTC date from ET Julian day number.
+  * @param tjd_et Julian day number (ET) to be converted.
+  * @param gregflag true == Gregorian calendar, false == Julian calendar
+  * @return The UTC date as SDate object.
+  *
+  * Note:<pre>
+  * - Before 1 jan 1972 UTC, output UT1.
+  *   Note: UTC was introduced in 1961. From 1961 - 1971, the length of the
+  *   UTC second was regularly changed, so that UTC remained very close to UT1.
+  * - From 1972 on, output is UTC.
+  * - If delta_t - nleap - 32.184 &gt; 1, the output is UT1.
+  *   Note: Like this we avoid errors greater than 1 second in case that
+  *   the leap seconds table (or the Swiss Ephemeris version) has not been
+  *   updated for a long time.</pre>
+  * @see #getUTCfromJDUT1(double, boolean)
+  * @see swisseph.SDate
+  * @see #SE_GREG_CAL
+  * @see #SE_JUL_CAL
+  */
+  /*
+   * Input:  tjd_et   Julian day number, terrestrial time (ephemeris time).
+   *         gregfalg Calendar flag
+   * Output: UTC year, month, day, hour, minute, second (decimal).
+   *
+   * - Before 1 jan 1972 UTC, output UT1.
+   *   Note: UTC was introduced in 1961. From 1961 - 1971, the length of the
+   *   UTC second was regularly changed, so that UTC remained very close to UT1.
+   * - From 1972 on, output is UTC.
+   * - If delta_t - nleap - 32.184 > 1, the output is UT1.
+   *   Note: Like this we avoid errors greater than 1 second in case that
+   *   the leap seconds table (or the Swiss Ephemeris version) has not been
+   *   updated for a long time.
+   */
   getUTCfromJDET(tjd_et, gregflag) {
     var i;
     var second_60 = 0;
@@ -1165,10 +1560,42 @@ class SweDate{
     return new SDate(iyear, imonth, iday, ihour, imin, dsec);
   }
 
-
+  /**
+  * Calculates the UTC date from UT1 (universal time) Julian day number.
+  * @param tjd_ut Julian day number (UT1) to be converted.
+  * @param gregflag true == Gregorian calendar, false == Julian calendar
+  * @return The UTC date as SDate object.
+  *
+  * Note:<pre>
+  * - Before 1 jan 1972 UTC, output UT1.
+  *   Note: UTC was introduced in 1961. From 1961 - 1971, the length of the
+  *   UTC second was regularly changed, so that UTC remained very close to UT1.
+  * - From 1972 on, output is UTC.
+  * - If delta_t - nleap - 32.184 &gt; 1, the output is UT1.
+  *   Note: Like this we avoid errors greater than 1 second in case that
+  *   the leap seconds table (or the Swiss Ephemeris version) has not been
+  *   updated for a long time.</pre>
+  * @see #getUTCfromJDET(double, boolean)
+  * @see swisseph.SDate
+  * @see #SE_GREG_CAL
+  * @see #SE_JUL_CAL
+  */
+  /*
+   * Input:  tjd_ut   Julian day number, universal time (UT1).
+   *         gregfalg Calendar flag
+   * Output: UTC year, month, day, hour, minute, second (decimal).
+   *
+   * - Before 1 jan 1972 UTC, output UT1.
+   *   Note: UTC was introduced in 1961. From 1961 - 1971, the length of the
+   *   UTC second was regularly changed, so that UTC remained very close to UT1.
+   * - From 1972 on, output is UTC.
+   * - If delta_t - nleap - 32.184 > 1, the output is UT1.
+   *   Note: Like this we avoid errors greater than 1 second in case that
+   *   the leap seconds table (or the Swiss Ephemeris version) has not been
+   *   updated for a long time.
+   */
   getUTCfromJDUT1(tjd_ut, gregflag) {
     var tjd_et = tjd_ut + this.getDeltaT(tjd_ut);
     return this.getUTCfromJDET(tjd_et, gregflag);
   }
-
 };

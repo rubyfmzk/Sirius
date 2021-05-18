@@ -14,7 +14,7 @@
 
   Copyright 2020- Ruby Fumizuki
   https://rubyfmzk.com
-  https://github.com/rubyfmzk/Y2J
+  https://github.com/rubyfmzk/Pluto
   rubyfmzk@gmail.com
 */
 /*
@@ -98,7 +98,7 @@ class IntObj{
 class DblObj{
   constructor(val){
     this.val = val;
-    if(val === undefined) this.val = 0;
+    if(val === undefined) this.val = 0.0;
   }
 };
 
@@ -323,3 +323,4 @@ class Houses{
     this.polasc = 0.0;
   }
 }
+

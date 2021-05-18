@@ -14,7 +14,7 @@
 
   Copyright 2020- Ruby Fumizuki
   https://rubyfmzk.com
-  https://github.com/rubyfmzk/Y2J
+  https://github.com/rubyfmzk/Pluto
   rubyfmzk@gmail.com
 */
 /*
@@ -1346,7 +1346,7 @@ class SweHouse{
   * planet is and how far from its cusp it is.
   * #swe_houses
   */
-  swe_house_pos(armc, geolat, doubleeps, hsys, doublexpin) {
+  swe_house_pos(armc, geolat, eps, hsys, xpin) {
     var xp=new Array(6), xeq=new Array(6), ra, de, mdd, mdn, sad, san;
     var hpos, sinad, ad, a, admc, adp, samc, demc, asc, mc, acmc, tant;
     var fh, ra0, tanfi, fac, dfac;

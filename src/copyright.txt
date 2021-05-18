@@ -1,5 +1,5 @@
 /*
-  Pluto.js version 0.3
+  Pluto.js version 0.5
 
   Pluto.js is ephemeris calculator for Sun, Moon and Planets.
   This file is made from the Swiss Ephemeris Free Edition,
