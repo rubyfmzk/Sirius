@@ -7,17 +7,18 @@ from the original C Code to JAVA and JAVA to JavaScript.
 # Example
 ### Planets' position
 ```
-$pl.setDate(year, month, day, hour, minute, second, timezone);
-var planetPositions = $pl.getPositions();
+const sirius = new Sirius()
+sirius.set_datetime(year, month, day, hour, minute, timezone)
+const planet_positions = sirius.get_planets()
 ```
 ### Houses
 ```
-$pl.setGeoPosition(latitude, longitude);
-var houses = $pl.getHouses(house);
+sirius.set_geo_position(latitude, longitude)
+const houses = sirius.get_houses(house)
 ```
 
 # Demo
-https://rubyfmzk.com/pluto/demo/
+dist/index.html
 
 # License
 GNU General Public License v2.0  
