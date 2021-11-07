@@ -1,5 +1,5 @@
-# Pluto.js is
-Pluto.js is ephemeris calculator for Sun, Moon and Planets.  
+# Sirius.js is
+Sirius.js is ephemeris calculator for Sun, Moon and Planets.  
 This file is made from the Swiss Ephemeris Free Edition,  
 Version 2.00.00 of Astrodienst AG, Switzerland  
 from the original C Code to JAVA and JAVA to JavaScript.  
