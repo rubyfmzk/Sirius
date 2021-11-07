@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Sirius.js</title>
+  <script src="Sirius.js"></script>
+
+  <style>
+    input{
+      width: 50px;
+    }
+    input[type=radio]{
+      width: 25px;
+    }
+    input[type="checkbox"]{
+      width: 25px;
+    }
+    button{
+      border: solid 2px #c0d2d2;
+      border-radius: 4px;
+      padding: 8px 30px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    #planet_result tr:nth-child(even), #house_result tr:nth-child(even){
+      background: #e3f7f7;
+    }
+    #planet_result td, #house_result td{
+      vertical-align: top;
+      padding: 0 10px;
+    }
+  </style>
+</head>
+<body>
+  
+  <h1>Sirius.js Demo</h1>
+  <table>
+    <tr>
+      <td>Year-Month-Day</td>
+      <td>
+        <input id="year" value="2000"> -
+        <input id="month" value="1"> -
+        <input id="day" value="1">
+      </td>
+    </tr>
+    <tr>
+      <td>Hour:Minute</td>
+      <td>
+        <input id="hour" value="0"> :
+        <input id="minute" value="0">
+      </td>
+    </tr>
+    <tr>
+      <td>Timezone</td>
+      <td>
+        <input id="timezone" value="0">
+      </td>
+    </tr>
+    <tr>
+      <td>Latitude / Longitude</td>
+      <td>
+        <input id="latitude" value="0"> /
+        <input id="longitude" value="0">
+      </td>
+    </tr>
+    <tr>
+      <td>Type</td>
+      <td>
+        <input id="siderial" type="checkbox">Siderial
+        <input id="heliocentric" type="checkbox">Heliocentric
+      </td>
+    </tr>
+    <tr>
+      <td>Calendar Type</td>
+      <td>
+        <input type="radio" value="Auto" class="calendar_type" name="calendar_type" id="calendar_type_Auto" checked=""><span class="calendar_type">Auto (Gregorian mode after Oct.15 1582)</span>
+        <input type="radio" value="Greg" class="calendar_type" name="calendar_type" id="calendar_type_Greg"><span class="calendar_type">Gregorian Calendar</span>
+        <input type="radio" value="Jul" class="calendar_type" name="calendar_type" id="calendar_type_Jul"><span class="calendar_type">Julian Calendar</span>
+      </td>
+    </tr>
+    <tr>
+      <td>Sidereal Type</td>
+      <td>
+        <input type="radio" value="" class="sidereal_type" name="sidereal_type" id="sidereal_type_" checked=""><span class="sidereal_type">Fagan/Bradley</span>
+        <input type="radio" value="1" class="sidereal_type" name="sidereal_type" id="sidereal_type_1" ><span class="sidereal_type">Lahiri</span>
+        <input type="radio" value="2" class="sidereal_type" name="sidereal_type" id="sidereal_type_2"><span class="sidereal_type">De Luce</span>
+        <input type="radio" value="3" class="sidereal_type" name="sidereal_type" id="sidereal_type_3"><span class="sidereal_type">Raman</span>
+        <input type="radio" value="4" class="sidereal_type" name="sidereal_type" id="sidereal_type_4"><span class="sidereal_type">Ushashashi</span>
+        <input type="radio" value="5" class="sidereal_type" name="sidereal_type" id="sidereal_type_5"><span class="sidereal_type">Krishnamurti</span>
+        <input type="radio" value="6" class="sidereal_type" name="sidereal_type" id="sidereal_type_6"><span class="sidereal_type">Djwhal Khool</span>
+        <input type="radio" value="7" class="sidereal_type" name="sidereal_type" id="sidereal_type_7"><span class="sidereal_type">Yukteshwar</span>
+        <input type="radio" value="8" class="sidereal_type" name="sidereal_type" id="sidereal_type_8"><span class="sidereal_type">JN Bhasin</span>
+        <input type="radio" value="14" class="sidereal_type" name="sidereal_type" id="sidereal_type_9"><span class="sidereal_type">Aldebaran at 15 Taurus</span>
+      </td>
+    </tr>
+    <tr>
+      <td>House System</td>
+      <td>
+        <input type="radio" value="" class="house_system" name="house_system" id="house_system_" checked=""><span class="house_system">Placidus</span>
+        <input type="radio" value="K" class="house_system" name="house_system" id="house_system_K"><span class="house_system">Koch</span>
+        <input type="radio" value="C" class="house_system" name="house_system" id="house_system_C"><span class="house_system">Campanus</span>
+        <input type="radio" value="R" class="house_system" name="house_system" id="house_system_R"><span class="house_system">Regiomontanus</span>
+        <input type="radio" value="E" class="house_system" name="house_system" id="house_system_E"><span class="house_system">Equal</span>
+        <input type="radio" value="W" class="house_system" name="house_system" id="house_system_W"><span class="house_system">Whole Sign</span>
+        <input type="radio" value="T" class="house_system" name="house_system" id="house_system_T"><span class="house_system">Topocentric</span>
+        <input type="radio" value="M" class="house_system" name="house_system" id="house_system_M"><span class="house_system">Morinus</span>
+        <input type="radio" value="X" class="house_system" name="house_system" id="house_system_X"><span class="house_system">Meridian</span>
+        <input type="radio" value="O" class="house_system" name="house_system" id="house_system_O"><span class="house_system">Porphyry</span>
+      </td>
+    </tr>
+    <tr>
+      <td>Next/Previous eclipse</td>
+      <td>
+        <input type="radio" value="0" class="eclipse" name="eclipse" id="eclipse_0" checked=""><span class="eclipse_0">Next eclipse</span>
+        <input type="radio" value="1" class="eclipse" name="eclipse" id="eclipse_1"><span class="eclipse_1">Previous eclipse</span>
+      </td>
+    </tr>
+  </table>
+
+  <button onclick="calc();">Calculate</button>
+
+  <h2>Planet Result</h2>
+  <table>
+    <tr>
+      <th>Planet</th>
+      <th>Longitude</th>
+      <th>Longitude Speed</th>
+      <th>Laitude</th>
+      <th>Laitude Speed</th>
+      <th>Distance</th>
+      <th>Distance Speed</th>
+    </tr>
+    <tbody id="planet_result"></tbody>
+  </table>
+
+  <h2>Solar eclipse (global)</h2>
+  <p id="solar_maximum_eclipse"></p>
+
+  <h2>Lunar eclipse (global)</h2>
+  <p id="lunar_maximum_eclipse"></p>
+
+  <h2>House Result</h2>
+  <table>
+    <tr>
+      <th>House</th>
+      <th>Longitude</th>
+    </tr>
+    <tbody id="house_result"></tbody>
+  </table>
+
+  <h2>Fixed stars</h2>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Longitude</th>
+      <th>Latitude</th>
+    </tr>
+    <tbody id="fixstar_result"></tbody>
+  </table>
+
+  <h2>Ayanamsha</h2>
+  <p id="ayanamsha"></p>
+
+  <script>
+calc()
+
+function $_(id){
+  return document.getElementById(id)
+}
+
+function $$_(selector){
+  return document.querySelector(selector)
+}
+
+function calc(){
+  var start_ms = new Date().getTime()
+
+  // init
+  const sirius = new Sirius()
+  $_("planet_result").innerHTML = ""
+  $_("house_result").innerHTML = ""
+  $_("fixstar_result").innerHTML = ""
+
+  // set datetime and modes
+  var year = $_("year").value;
+  var month = $_("month").value;
+  var day = $_("day").value;
+  var hour = $_("hour").value;
+  var minute = $_("minute").value;
+  var timezone = $_("timezone").value;
+  var latitude = $_("latitude").value;
+  var longitude = $_("longitude").value;
+  sirius.set_datetime(year, month, day, hour, minute, timezone)
+
+  // calendar type
+  const calendar_type = $$_(".calendar_type:checked").value
+  sirius.set_calendar_type(calendar_type)
+
+  // siderial mode
+  if($_("siderial").checked){
+    var sidereal_type = parseInt($$_(".sidereal_type:checked").value);
+    sirius.set_siderial(sidereal_type);
+  }
+  else{
+    sirius.unset_siderial();
+  }
+
+  // heliocentric mode
+  if($_("heliocentric").checked){
+    sirius.set_heliocentric();
+  }
+  else{
+    sirius.unset_heliocentric();
+  }
+
+  // planet info
+  var planets = sirius.get_planets()
+  for(var planet in sirius.planetNames){
+    var text = "";
+    text += '<tr>';
+    text += '<td>' + planet + '</td>';
+    text += '<td>'+getDigit60(planets[planet].longitude);
+    text += ' ('+(planets[planet].longitude).toFixed(6)+')</td>';
+    text += '<td>'+getDigit60(planets[planet].longitudeSpeed);
+    text += ' ('+(planets[planet].longitudeSpeed).toFixed(6)+')</td>';
+    text += '<td>'+getDigit60(planets[planet].latitude);
+    text += ' ('+(planets[planet].latitude).toFixed(6)+')</td>';
+    text += '<td>'+getDigit60(planets[planet].latitudeSpeed);
+    text += ' ('+(planets[planet].latitudeSpeed).toFixed(6)+')</td>';
+    text += '<td>'+(planets[planet].distance).toFixed(6)+'</td>';
+    text += '<td>'+(planets[planet].distanceSpeed).toFixed(6)+'</td>';
+    text += "</tr>";
+    $_("planet_result").innerHTML += text;
+  } 
+  // house
+  sirius.set_geo_position(latitude, longitude);
+  var house = $$_(".house_system:checked").value;
+  var houses = sirius.get_houses(house);
+  for(var i=1; i<=12; i++){
+    var text = "";
+    text += '<tr>';
+    text += '<td>House ' + i + '</td>';
+    text += '<td>'+getDigit60(houses[i]);
+    text += ' ('+houses[i].toFixed(6)+')</td>';
+    text += "</tr>";
+    $_("house_result").innerHTML += text;
+  }
+
+  // ayanamsha
+  $_("ayanamsha").innerHTML = sirius.get_ayanamsha();
+
+  // eclipse
+  const backward = parseInt($$_(".eclipse:checked").value)
+  let solar_eclipse = sirius.get_solar_eclipse(backward)
+  $_('solar_maximum_eclipse').innerHTML = solar_eclipse.maximum_eclipse.datetime
+  let lunar_eclipse = sirius.get_lunar_eclipse(backward)
+  $_('lunar_maximum_eclipse').innerHTML = lunar_eclipse.maximum_eclipse.datetime
+
+  // star
+  const star_list = ['alTau', 'alVir', 'alSco']
+  for(var i in star_list){
+    const star = star_list[i]
+    const star_info = sirius.get_fixstar(star)
+
+    let text = "";
+    text += '<tr>';
+    text += '<td>' + star_info.names[0] + '</td>';
+    text += '<td>'+getDigit60(star_info.longitude)+'</td>';
+    text += '<td>'+getDigit60(star_info.latitude)+'</td>';
+    text += "</tr>";
+    $_("fixstar_result").innerHTML += text;
+  } 
+  
+
+
+  var elapsed_ms = new Date().getTime() - start_ms;
+  console.log('seconds：' + elapsed_ms);
+}
+
+function getDigit60(degree){
+  var minus = degree < 0 ? "-" : "";
+  degree = Math.abs(degree);
+  return minus + parseInt(degree) + "° " + parseInt(degree % 1 * 60) + "' " + (degree * 60 % 1 * 60 ).toFixed(4);
+}
+  </script>
+</body>
+</html>

@@ -9,7 +9,7 @@
     "watch": "webpack -w",
     "tsc": "tsc",
     "webpack": "webpack",
-    "serve": "webpack-dev-server --open"
+    "serve": "webpack -w & webpack-dev-server --open"
   },
   "repository": {
     "type": "git",
@@ -27,5 +27,6 @@
     "webpack": "^5.61.0",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.4.0"
-  }
+  },
+  "dependencies": {}
 }
