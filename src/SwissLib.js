@@ -12,10 +12,12 @@ import { SwissData } from "./SwissData"
 import { SweDate } from "./SweDate"
 import { SwephData } from "./SwephData"
 import { Swemmoon } from "./Swemmoon"
+import { Swenut2000a, Swenut2000a_cls, Swenut2000a_npl, Swenut2000aNls } from "./Swenut2000"
 
 export class SwissLib{
-  constructor(swed){
-    this.sd = new SweDate;
+  constructor(swed, sd){
+    this.swed = swed ? swed : SwissData
+    this.sd = sd ? sd : new SweDate
 
     this.PREC_IAU_1976_CTIES = 2.0;        /* J2000 +/- two centuries */
     this.PREC_IAU_2000_CTIES = 2.0;        /* J2000 +/- two centuries */
@@ -25,10 +27,6 @@ export class SwissLib{
     this.DPSI_DEPS_IAU1980_FILE_FINALS  = "eop_finals.txt";
     this.DPSI_DEPS_IAU1980_TJD0_HORIZONS = 2437684.5;
     this.HORIZONS_TJD0_DPSI_DEPS_IAU1980 = 2437684.5;
-
-    this.swed=swed;
-    if (this.swed ===null || this.swed === undefined) { this.swed= SwissData; }
-
 
     this.AS2R = (this.swed.DEGTORAD / 3600.0);
     this.D2PI = SwephData.TWOPI;
@@ -1623,24 +1621,24 @@ export class SwissLib{
                 T*(        - 0.00005939 ))))) / 3600.0) * this.swed.DEGTORAD;
     /* luni-solar nutation series, in reverse order, starting with small terms */
     if (nut_model == Swe.SEMOD_NUT_IAU_2000B)
-      inls = Swe.Swenut2000a.NLS_2000B;
+      inls = Swenut2000a.NLS_2000B;
     else
-      inls = Swe.Swenut2000a.NLS;
+      inls = Swenut2000a.NLS;
     for (i = inls - 1; i >= 0; i--) {
       j = i * 5;
-      darg = this.swe_radnorm( Swe.Swenut2000aNls.nls[j + 0] * M  +
-                          Swe.Swenut2000aNls.nls[j + 1] * SM +
-                          Swe.Swenut2000aNls.nls[j + 2] * F   +
-                          Swe.Swenut2000aNls.nls[j + 3] * D   +
-                          Swe.Swenut2000aNls.nls[j + 4] * OM);
+      darg = this.swe_radnorm( Swenut2000aNls.nls[j + 0] * M  +
+                          Swenut2000aNls.nls[j + 1] * SM +
+                          Swenut2000aNls.nls[j + 2] * F   +
+                          Swenut2000aNls.nls[j + 3] * D   +
+                          Swenut2000aNls.nls[j + 4] * OM);
       sinarg = Math.sin(darg);
       cosarg = Math.cos(darg);
       k = i * 6;
-      dpsi += (Swe.Swenut2000a_cls.cls[k+0] + Swe.Swenut2000a_cls.cls[k+1] * T) * sinarg + Swe.Swenut2000a_cls.cls[k+2] * cosarg;
-      deps += (Swe.Swenut2000a_cls.cls[k+3] + Swe.Swenut2000a_cls.cls[k+4] * T) * cosarg + Swe.Swenut2000a_cls.cls[k+5] * sinarg;
+      dpsi += (Swenut2000a_cls.cls[k+0] + Swenut2000a_cls.cls[k+1] * T) * sinarg + Swenut2000a_cls.cls[k+2] * cosarg;
+      deps += (Swenut2000a_cls.cls[k+3] + Swenut2000a_cls.cls[k+4] * T) * cosarg + Swenut2000a_cls.cls[k+5] * sinarg;
     }
-    nutlo[0] = dpsi * Swe.Swenut2000a.O1MAS2DEG;
-    nutlo[1] = deps * Swe.Swenut2000a.O1MAS2DEG;
+    nutlo[0] = dpsi * Swenut2000a.O1MAS2DEG;
+    nutlo[1] = deps * Swenut2000a.O1MAS2DEG;
     if (nut_model == Swe.SEMOD_NUT_IAU_2000A) {
       /* planetary nutation
        * note: The MHB2000 code computes the luni-solar and planetary nutation
@@ -1672,30 +1670,30 @@ export class SwissLib{
       /* planetary nutation series (in reverse order).*/
       dpsi = 0;
       deps = 0;
-      for (i = Swe.Swenut2000a.NPL - 1; i >= 0; i--) {
+      for (i = Swenut2000a.NPL - 1; i >= 0; i--) {
         j = i * 14;
-        darg = this.swe_radnorm( Swe.Swenut2000a_npl.npl[j + 0] * AL   +
-             Swe.Swenut2000a_npl.npl[j + 1] * ALSU +
-             Swe.Swenut2000a_npl.npl[j + 2] * AF   +
-             Swe.Swenut2000a_npl.npl[j + 3] * AD   +
-             Swe.Swenut2000a_npl.npl[j + 4] * AOM  +
-             Swe.Swenut2000a_npl.npl[j + 5] * ALME +
-             Swe.Swenut2000a_npl.npl[j + 6] * ALVE +
-             Swe.Swenut2000a_npl.npl[j + 7] * ALEA +
-             Swe.Swenut2000a_npl.npl[j + 8] * ALMA +
-             Swe.Swenut2000a_npl.npl[j + 9] * ALJU +
-             Swe.Swenut2000a_npl.npl[j +10] * ALSA +
-             Swe.Swenut2000a_npl.npl[j +11] * ALUR +
-             Swe.Swenut2000a_npl.npl[j +12] * ALNE +
-             Swe.Swenut2000a_npl.npl[j +13] * APA);
+        darg = this.swe_radnorm( Swenut2000a_npl.npl[j + 0] * AL   +
+             Swenut2000a_npl.npl[j + 1] * ALSU +
+             Swenut2000a_npl.npl[j + 2] * AF   +
+             Swenut2000a_npl.npl[j + 3] * AD   +
+             Swenut2000a_npl.npl[j + 4] * AOM  +
+             Swenut2000a_npl.npl[j + 5] * ALME +
+             Swenut2000a_npl.npl[j + 6] * ALVE +
+             Swenut2000a_npl.npl[j + 7] * ALEA +
+             Swenut2000a_npl.npl[j + 8] * ALMA +
+             Swenut2000a_npl.npl[j + 9] * ALJU +
+             Swenut2000a_npl.npl[j +10] * ALSA +
+             Swenut2000a_npl.npl[j +11] * ALUR +
+             Swenut2000a_npl.npl[j +12] * ALNE +
+             Swenut2000a_npl.npl[j +13] * APA);
         k = i * 4;
         sinarg = Math.sin(darg);
         cosarg = Math.cos(darg);
-        dpsi +=  Swe.Swenut2000a.icpl[k+0] * sinarg +  Swe.Swenut2000a.icpl[k+1] * cosarg;
-        deps +=  Swe.Swenut2000a.icpl[k+2] * sinarg +  Swe.Swenut2000a.icpl[k+3] * cosarg;
+        dpsi +=  Swenut2000a.icpl[k+0] * sinarg +  Swenut2000a.icpl[k+1] * cosarg;
+        deps +=  Swenut2000a.icpl[k+2] * sinarg +  Swenut2000a.icpl[k+3] * cosarg;
       }
-      nutlo[0] += dpsi * Swe.Swenut2000a.O1MAS2DEG;
-      nutlo[1] += deps * Swe.Swenut2000a.O1MAS2DEG;
+      nutlo[0] += dpsi * Swenut2000a.O1MAS2DEG;
+      nutlo[1] += deps * Swenut2000a.O1MAS2DEG;
 
       /* changes required by adoption of P03 precession
        * according to Capitaine et al. A & A 412, 366 (2005) = IAU 2006 */

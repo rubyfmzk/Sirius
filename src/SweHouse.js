@@ -16,16 +16,13 @@ import { Houses } from "./Classes"
 
 export class SweHouse{
 
-  constructor(sl, sw, swed){
+  constructor(sl, sw, swed, sd){
     this.MILLIARCSEC = 1.0 / 3600000.0;
     this.VERY_SMALL=1E-10;
-    this.sd = new SweDate;
-    this.sl   = sl;
-    this.sw   = sw;
-    this.swed = swed;
-    if (this.sl   ==null) { this.sl   =new SwissLib(); }
-    if (this.sw   ==null) { this.sw   =new SwissEph(); }
-    if (this.swed ==null) { this.swed =SwissData; }
+    this.sd   = sd   ? sd : new SweDate()
+    this.sl   = sl   ? sl : new SwissLib()
+    this.sw   = sw   ? sw : new SwissEph(this.sd)
+    this.swed = swed ? swed : SwissData
   }
 
   sind(x) {

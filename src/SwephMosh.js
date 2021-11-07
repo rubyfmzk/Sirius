@@ -11,16 +11,14 @@ import { SwemptabSat } from "./SwemptabSat"
 import { SwemptabUra } from "./SwemptabUra"
 import { SwemptabNep } from "./SwemptabNep"
 import { SwemptabPlu } from "./SwemptabPlu"
+import { DblObj, IntObj } from "./Classes"
 
 export class SwephMosh{
-  constructor(sl, sw, swed){
-    this.sl    = sl;
-    this.sw    = sw;
-    this.swed  = swed;
-    if (this.sl   ==null) { this.sl   =new SwissLib(); }
-    if (this.sw   ==null) { this.sw   =new SwissEph(); }
-    if (this.swed ==null) { this.swed =SwissData; }
-    this.sm    = new Swemmoon(this.swed, this.sl);
+  constructor(sl, sw, swed, sm, sd){
+    this.sl    = sl   ? sl   : new SwissLib(swed)
+    this.sw    = sw   ? sw   : new SwissEph(sd)
+    this.swed  = swed ? swed : SwissData
+    this.sm    = sm   ? sm   : new Swemmoon(this.swed, this.sl)
 
     this.TIMESCALE=3652500.0;
     this.FICT_GEO=1;

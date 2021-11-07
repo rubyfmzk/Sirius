@@ -133,6 +133,7 @@ export const SwissData = {
     pldat : new Array(SwephData.SEI_NPLANETS),
     nddat : new Array(SwephData.SEI_NNODE_ETC),
     savedat : new Array(Swe.SE_NPLANETS+1),
+    // savedat : (function(){const a = Array(Swe.SE_NPLANETS+1); a.map(b=>new SavePositions); return a })(), //new Array(Swe.SE_NPLANETS+1),
     oec : new Epsilon,
     oec2000 : new Epsilon,
     nut : new Nut,

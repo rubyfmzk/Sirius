@@ -16,6 +16,7 @@
 import { Swe } from "./Swe"
 import { SwissData } from "./SwissData"
 import { SwephData } from "./SwephData"
+import { IDate } from "./Classes"
 
 export class SweDate{
   constructor(year, month, day, hour, calType){
@@ -39,8 +40,9 @@ export class SweDate{
     this.is_tid_acc_manual  = false;
     this.init_dt_done = false;
     this.jd = 0.0;
+    // JD for the start of the Gregorian calendar system (October 15, 1582):
     this.jdCO  = 2299160.5;
-    this.calType = false;
+    this.calType = false
     this.year = 0;
     this.month = 0;
     this.day = 0;
@@ -354,7 +356,7 @@ export class SweDate{
   * @see #SE_KEEP_JD
   */
   setCalendarType(newCalType, keepDate) {
-    if (this.calType != this.newCalType) {
+    if (this.calType != newCalType) {
       this.calType=newCalType;
       this.deltatIsValid=false;
       if (keepDate) {
@@ -375,7 +377,9 @@ export class SweDate{
   * date and the date of this object.
   */
   updateCalendarType() {
-    this.calType=(this.jdCO<=this.jd?this.SE_GREG_CAL:this.SE_JUL_CAL);;
+    this.calType=(this.jdCO<=this.jd?this.SE_GREG_CAL:this.SE_JUL_CAL)
+    this.jd=this.swe_julday(this.year, this.month, this.day,
+                       this.hour, this.calType)
   }
 
   /**
@@ -389,189 +393,15 @@ export class SweDate{
   * the date into a valid date
   * @return true, if check==false, or if the date is valid. False otherwise
   */
-  setDate(newYear, newMonth, newDay, newHour, check) {
-    this.year=newYear;
-    this.month=newMonth;
-    this.day=newDay;
-    this.hour=newHour;
-    this.deltatIsValid=false;
+  setDate(newYear, newMonth, newDay, newHour) {
+    this.year=newYear
+    this.month=newMonth
+    this.day=newDay
+    this.hour=newHour
+    this.deltatIsValid=false
     this.jd=this.swe_julday(this.year, this.month, this.day,
-                       this.hour, this.calType);
-    if (check) {
-      var oldMonth=newMonth;
-      var oldDay=newDay;
-      var oldHour=newHour;
-      var dt=this.swe_revjul(this.jd,this.calType);
-      this.year=dt.year;
-      this.month=dt.month;
-      this.day=dt.day;
-      this.hour=dt.hour;
-
-      return (this.year==newYear &&
-          this.month==oldMonth &&
-          this.day==oldDay &&
-          Math.abs(this.hour-oldHour)<1E-6);
-    }
-    return true;
-  }
-
-  setYear(newYear, check) {
-
-    this.year=newYear;
-    this.deltatIsValid=false;
-    this.jd=this.swe_julday(this.year, this.month, this.day,
-                       this.hour, this.calType);  // -> erzeugt JD
-    if (check) {
-      var oldMonth=this.month;
-      var oldDay=this.day;
-      var dt=this.swe_revjul(this.jd,this.calType);  // -> erzeugt neues Datum
-      this.year=dt.year;
-      this.month=dt.month;
-      this.day=dt.day;
-      this.hour=dt.hour;
-
-      return (this.year==newYear && this.month==oldMonth && this.day==oldDay);
-    }
-    return true;
-  }
-
-  setMonth(newMonth, check) {
-
-    this.month=newMonth;
-    this.deltatIsValid=false;
-    this.jd=this.swe_julday(this.year, this.month, this.day,
-                       this.hour, this.calType);  // -> erzeugt JD
-    if (check) {
-      var oldYear=this.year;
-      var oldDay=this.day;
-      var dt=this.swe_revjul(this.jd,this.calType);  // -> erzeugt neues Datum
-      this.year=dt.year;
-      this.month=dt.month;
-      this.day=dt.day;
-      this.hour=dt.hour;
-
-      return (this.year==oldYear && this.month==newMonth && this.day==oldDay);
-    }
-    return true;
-  }
-
-  setDay(newDay, check) {
-
-    this.day=newDay;
-    this.deltatIsValid=false;
-    this.jd=this.swe_julday(this.year, this.month, this.day,
-                       this.hour, this.calType);  // -> erzeugt JD
-    if (check) {
-      var oldYear=this.year;
-      var oldMonth=this.month;
-      var dt=this.swe_revjul(this.jd,this.calType);  // -> erzeugt neues Datum
-      this.year=dt.year;
-      this.month=dt.month;
-      this.day=dt.day;
-      this.hour=dt.hour;
-
-      return (this.year==oldYear && this.month==oldMonth && this.day==newDay);
-    }
-    return true;
-  }
-
-  setHour(newHour) {
-    this.hour=newHour;
-    this.jd=this.swe_julday(this.year, this.month, this.day,
-                       this.hour, this.calType);
-    return true;
-  }
-
-  /**
-  * Checks the given date to see, if it is a valid date.
-  * @param year the year, for which is to be checked
-  * @param month the month, for which is to be checked
-  * @param day the day, for which is to be checked
-  * @param hour the hour, for which is to be checked
-  * @return true, if the date is valid, false, if not
-  */
-  checkDate(year, month, day, hour) {
-    if(year === undefined){
-      return this.checkDate(this.year, this.month, this.day, this.hour);
-    }
-
-    if(hour === undefined){
-      return this.checkDate(year, month, day, 0.0);
-    }
-
-    let jd = this.swe_julday(year, month, day, hour, this.SE_GREG_CAL);
-    let dt = this.swe_revjul(jd, this.SE_GREG_CAL);
-
-    return (dt.year==year && dt.month==month && dt.day==day);
-  }
-
-  /**
-  * Makes the date to be a valid date.
-  */
-  makeValidDate() {
-    var jd=this.swe_julday(this.year,this.month,this.day,this.hour,this.SE_GREG_CAL);
-    var dt=this.swe_revjul(jd,this.SE_GREG_CAL);
-    this.year=dt.year;
-    this.month=dt.month;
-    this.day=dt.day;
-    this.hour=dt.hour;
-  }
-
-  /**
-  * Returns the julian day number on which the Gregorian calendar system
-  * comes to be in effect.
-  * @return Julian day number of the date, the Gregorian calendar started
-  */
-  getGregorianChange() {
-    return this.jdCO;
-  }
-
-  /**
-  * Changes the date of the start of the Gregorian calendar system.
-  * This method will keep the date and change the julian day number
-  * of the date of this SweDate object if required.
-  * @param year The year (in Gregorian system) for the new start date
-  * @param month The month (in Gregorian system) for the new start date.
-  * Adversely to java.util.Calendar, the month is to be given in the
-  * range of 1 for January to 12 for December!
-  * @param day The day of the month (in Gregorian system, from 1 to 31)
-  * for the new start date
-  */
-  /**
-  * Changes the date of the start of the Gregorian calendar system.
-  * This method will keep the julian day number and change year,
-  * month and day of the date of this SweDate object if required.
-  * @param newJDCO The julian day number, on which the Gregorian calendar
-  * came into effect.
-  */
-  setGregorianChange(year, month, day) {
-    //引数が1つの場合
-    if(month === undefined){
-      var newJDCO = year;
-
-      this.jdCO = newJDCO;
-      this.calType = (this.jd>=this.jdCO?this.SE_GREG_CAL:this.SE_JUL_CAL);
-      var dt = this.swe_revjul(this.jd,this.calType);
-      this.year = dt.year;
-      this.month = dt.month;
-      this.day = dt.day;
-      this.hour = dt.hour;
-      return;
-    }
-
-    this.year = year;
-    this.month = month;
-    this.day = day;
-    deltatIsValid = false;
-    this.calType = this.SE_GREG_CAL;
-    if (this.year < year ||
-        (this.year == year && this.month < month) ||
-        (this.year == year && this.month == month && this.day < day)) {
-      this.calType = this.SE_JUL_CAL;
-    }
-    this.jdCO = this.swe_julday(year, month, day, 0., this.SE_GREG_CAL);
-    this.jd = this.swe_julday(this.year, this.month, this.day, this.hour,
-                         this.calType);
+                       this.hour, this.calType)
+    return true
   }
 
   /**

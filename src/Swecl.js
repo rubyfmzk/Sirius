@@ -16,18 +16,13 @@ import { SweDate } from "./SweDate"
 import { SarosData, DblObj, SavePositions } from "./Classes"
 
 export class Swecl{
-  constructor(sw, sl, sm, swed){
-    this.sw=sw;
-    this.sl=sl;
-    this.sm=sm;
-    this.swed=swed;
-    if (sw===undefined) { this.sw=new SwissEph(); }
-    if (sl===undefined) { this.sl=new SwissLib(); }
-    if (sm===null) { this.sm=new Swemmoon(); }
-    if (swed===undefined) { this.swed = SwissData; }
-
+  constructor(sw, sl, sm, swed, sd){
+    this.sw   = sw   ? sw   : SwissEph(sd)
+    this.sl   = sl   ? sl   : new SwissLib(swed, sd)
+    this.sm   = sm   ? sm   : new Swemmoon(swed, sl)
+    this.swed = swed ? swed : SwissData
+    this.sd   = sd   ? sd   : new SweDate()
     this.const_lapse_rate = SwephData.SE_LAPSE_RATE;  /* for refraction */
-    this.sd = new SweDate();
 
     this.SAROS_CYCLE = 6585.3213;
 
@@ -1456,7 +1451,7 @@ export class Swecl{
       if (dont_times) {
         break;
       }
-console.log(2, dc, retflag);
+
       /*
        * n = 0: times of eclipse begin and end
        * n = 1: times of totality begin and end
@@ -3135,6 +3130,7 @@ console.log(2, dc, retflag);
     x[0] = this.sl.swe_degnorm(mdd - 90);
     x[1] = xra[1];
     x[2] = 1;
+    
     /* azimuth from east, counterclock */
     this.sl.swe_cotrans(x, 0, x, 0, 90 - geopos[1]);
     /* azimuth from south to west */
@@ -3650,7 +3646,7 @@ console.log(2, dc, retflag);
       }
       k = j + 1;
       if ((k - d) * this.SAROS_CYCLE < 2) {
-        attr[9] = parseFloat(saros_data_lunar[i].series_no);
+        attr[9] = parseFloat(this.saros_data_lunar[i].series_no);
         attr[10] = parseFloat(k) + 1;
         break;
       }

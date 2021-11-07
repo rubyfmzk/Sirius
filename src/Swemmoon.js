@@ -5,11 +5,8 @@ import { SwissData } from "./SwissData"
 export class Swemmoon{
 
   constructor(swed, sl){
-    this.swed=swed;
-    this.sl=sl;
-    if (this.swed ===undefined) { this.swed = SwissData; }
-    if (this.sl   ===undefined) { this.sl   =new SwissLib(); }
-
+    this.swed = swed ? swed : SwissData
+    this.sl   = sl   ? sl   : new SwissLib()
 
     /* The following coefficients were calculated by a simultaneous least
      * squares fit between the analytical theory and DE404 on the finite

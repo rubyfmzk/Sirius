@@ -1,6 +1,6 @@
 export const Swe = {
 
-  J_MERCURY :  0,
+  J_MERCURY :  1,
   J_VENUS   :  1,
   J_EARTH   :  2,
   J_MARS    :  3,
